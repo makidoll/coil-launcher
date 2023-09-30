@@ -41,6 +41,17 @@
 				"icons/icon.ico"
 			]
 		},
+		"updater": {
+			"active": true,
+			"endpoints": [
+				"https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+			],
+			"dialog": true,
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGRTUwNEY3RjQ4MDE0MUIKUldRYkZJRDA5d1RsanoyOVhxVUU3b3RrL1RlYVYvMi9VTjJCZzQxbGx6b25ZVFE1eUJraVRPME0K",
+			"windows": {
+				"installMode": "passive"
+			}
+		},
 		"security": {
 			"csp": null
 		},
