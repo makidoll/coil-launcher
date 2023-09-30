@@ -1,64 +1,31 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+import { Flex, Grid } from "@chakra-ui/react";
+import GameButton from "./GameButton";
+import TitleBar from "./TitleBar";
+import essenceBgImage from "./images/essence-bg-darker.png";
+import essenceTextImage from "./images/essence-text.png";
 
 function App() {
-	const [greetMsg, setGreetMsg] = useState("");
-	const [name, setName] = useState("");
-
-	async function greet() {
-		// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-		setGreetMsg(await invoke("greet", { name }));
-	}
-
 	return (
-		<div className="container">
-			<h1>Welcome to Tauri!</h1>
-
-			<div className="row">
-				<a href="https://vitejs.dev" target="_blank">
-					<img
-						src="/vite.svg"
-						className="logo vite"
-						alt="Vite logo"
-					/>
-				</a>
-				<a href="https://tauri.app" target="_blank">
-					<img
-						src="/tauri.svg"
-						className="logo tauri"
-						alt="Tauri logo"
-					/>
-				</a>
-				<a href="https://reactjs.org" target="_blank">
-					<img
-						src={reactLogo}
-						className="logo react"
-						alt="React logo"
-					/>
-				</a>
-			</div>
-
-			<p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-			<form
-				className="row"
-				onSubmit={e => {
-					e.preventDefault();
-					greet();
-				}}
+		<Flex
+			w="100vw"
+			h="100vh"
+			flexDir={"column"}
+			bg="#111"
+			userSelect={"none"}
+			// pointerEvents={"none"}
+		>
+			<TitleBar />
+			<Grid
+				w="100%"
+				templateColumns="repeat(3, 1fr)"
+				gap={2}
+				p={2}
+				mt={-2}
 			>
-				<input
-					id="greet-input"
-					onChange={e => setName(e.currentTarget.value)}
-					placeholder="Enter a name..."
-				/>
-				<button type="submit">Greet</button>
-			</form>
-
-			<p>{greetMsg}</p>
-		</div>
+				<GameButton bg={essenceBgImage} logo={essenceTextImage} />
+				<GameButton name={"Unknown"} disabled />
+			</Grid>
+		</Flex>
 	);
 }
 
