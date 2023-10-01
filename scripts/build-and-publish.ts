@@ -79,7 +79,7 @@ const minio: ClientOptions = {
 	region: "us-east-1", // default for minio lmao
 };
 
-const allowedExts = [".AppImage", ".tar.gz", ".sig"];
+const allowedExts = [".AppImage", ".tar.gz", ".sig", ".zip", ".exe"];
 
 const isWindows = Deno.build.os == "windows";
 
