@@ -1,6 +1,6 @@
 import * as path from "https://deno.land/std@0.203.0/path/mod.ts";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 const date = new Date();
 const version =
@@ -15,8 +15,11 @@ const version =
 	date.getMinutes();
 
 async function prettier(path: string) {
-	await new Deno.Command("prettier", {
-		args: ["-w", path],
+	const installArgs = ["prettier", "-w", path];
+	if (Deno.build.os=="windows") installArgs.unshift("cmd", "/c");
+
+	await new Deno.Command(installArgs[0], {
+		args: installArgs.slice(1),
 		cwd: __dirname,
 	}).output();
 }
