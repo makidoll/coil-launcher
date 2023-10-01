@@ -10,7 +10,7 @@ import {
 const __dirname = new URL(".", import.meta.url).pathname;
 
 async function makeBuild() {
-	return "/home/maki/git/mechanyx-coil/src-tauri/target/release/bundle/";
+	// return "/home/maki/git/mechanyx-coil/src-tauri/target/release/bundle/";
 
 	const bundleDir = path.resolve(
 		__dirname,

@@ -8,7 +8,7 @@
 	},
 	"package": {
 		"productName": "Mechanyx Coil",
-		"version": "2023.10.1-t3.23"
+		"version": "2023.10.1-t4.27"
 	},
 	"tauri": {
 		"allowlist": {
