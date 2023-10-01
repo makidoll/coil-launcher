@@ -42,8 +42,7 @@
 				"icons/icon.ico"
 			],
 			"windows": {
-				"nsis": {
-				}
+				"nsis": {}
 			}
 		},
 		"updater": {
@@ -67,7 +66,8 @@
 				"title": "Mechanyx Coil",
 				"width": 600,
 				"height": 400,
-				"decorations": false
+				"decorations": false,
+				"transparent": true
 			}
 		]
 	}

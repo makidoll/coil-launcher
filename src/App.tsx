@@ -11,7 +11,9 @@ function App() {
 			h="100vh"
 			flexDir={"column"}
 			bg="#111"
+			borderRadius={12}
 			userSelect={"none"}
+			overflow={"hidden"}
 			// pointerEvents={"none"}
 		>
 			<TitleBar />
