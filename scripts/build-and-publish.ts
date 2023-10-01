@@ -45,7 +45,7 @@ async function makeBuild() {
 
 	const buildArgs = ["yarn", "tauri", "build"];
 	if (Deno.build.os == "windows") {
-		installArgs.unshift("cmd", "/c");
+		buildArgs.unshift("cmd", "/c");
 	}
 
 	const build = await new Deno.Command(buildArgs[0], {
