@@ -9,6 +9,8 @@ import {
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
+const isWindows = Deno.build.os == "windows";
+
 async function betterExists(path: string) {
 	try {
 		return await fs.exists(path);
@@ -34,9 +36,7 @@ async function makeBuild() {
 	const cwd = path.resolve(__dirname, "..");
 
 	const installArgs = ["yarn"];
-	if (Deno.build.os == "windows") {
-		installArgs.unshift("cmd", "/c");
-	}
+	if (isWindows) installArgs.unshift("cmd", "/c");
 
 	await new Deno.Command(installArgs[0], {
 		args: installArgs.slice(1),
@@ -44,9 +44,7 @@ async function makeBuild() {
 	}).output();
 
 	const buildArgs = ["yarn", "tauri", "build"];
-	if (Deno.build.os == "windows") {
-		buildArgs.unshift("cmd", "/c");
-	}
+	if (isWindows) buildArgs.unshift("cmd", "/c");
 
 	const build = await new Deno.Command(buildArgs[0], {
 		args: buildArgs.slice(1),
@@ -80,8 +78,6 @@ const minio: ClientOptions = {
 };
 
 const allowedExts = [".AppImage", ".tar.gz", ".sig", ".zip", ".exe"];
-
-const isWindows = Deno.build.os == "windows";
 
 const bundleDir = path.resolve(
 	await makeBuild(),
@@ -117,11 +113,18 @@ const version = JSON.parse(
 	),
 ).package.version;
 
-const tarGzFile = filesToUpload.find(f => f.name.endsWith(".tar.gz"));
-if (tarGzFile == null) throw new Error("Failed to find .tar.gz file");
+const updateFileExt = isWindows ? ".zip" : ".tar.gz";
 
-const tarGzSigFile = filesToUpload.find(f => f.name.endsWith(".tar.gz.sig"));
-if (tarGzSigFile == null) throw new Error("Failed to find .tar.gz.sig file");
+const updateFile = filesToUpload.find(f => f.name.endsWith(updateFileExt));
+if (updateFile == null) throw new Error(`Failed to find ${updateFileExt} file`);
+
+const updateSigFile = filesToUpload.find(f =>
+	f.name.endsWith(updateFileExt + ".sig"),
+);
+
+if (updateSigFile == null) {
+	throw new Error(`Failed to find ${updateFileExt}.sig file`);
+}
 
 const updateFileUrl =
 	"https://" +
@@ -129,13 +132,13 @@ const updateFileUrl =
 	"/" +
 	minio.bucket +
 	"/launcher/" +
-	tarGzFile?.name;
+	updateFile?.name;
 
 const updateFileJson = {
 	version,
 	pub_date: new Date().toISOString(),
 	url: updateFileUrl,
-	signature: new TextDecoder().decode(tarGzSigFile.buffer),
+	signature: new TextDecoder().decode(updateSigFile.buffer),
 	notes: "No release notes",
 };
 
