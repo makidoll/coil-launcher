@@ -3,20 +3,19 @@ import * as path from "https://deno.land/std@0.203.0/path/mod.ts";
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 const date = new Date();
+
 const version =
-	date.getFullYear() +
+	String(date.getUTCFullYear()).slice(-2) +
 	"." +
-	(date.getMonth() + 1) +
+	(date.getUTCMonth() + 1) +
 	"." +
-	date.getDate() +
-	"-t" +
-	date.getHours() +
-	"." +
-	date.getMinutes();
+	date.getUTCDate() +
+	"-" +
+	(date.getUTCHours() * 60 + date.getUTCMinutes());
 
 async function prettier(path: string) {
 	const installArgs = ["prettier", "-w", path];
-	if (Deno.build.os=="windows") installArgs.unshift("cmd", "/c");
+	if (Deno.build.os == "windows") installArgs.unshift("cmd", "/c");
 
 	await new Deno.Command(installArgs[0], {
 		args: installArgs.slice(1),
