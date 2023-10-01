@@ -9,6 +9,14 @@ import {
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
+async function betterExists(path: string) {
+	try {
+		return await fs.exists(path);
+	} catch (err) {
+		return false;
+	}
+}
+
 async function makeBuild() {
 	// return "/home/maki/git/mechanyx-coil/src-tauri/target/release/bundle/";
 
@@ -17,7 +25,7 @@ async function makeBuild() {
 		"../src-tauri/target/release/bundle",
 	);
 
-	if (await fs.exists(bundleDir)) {
+	if (await betterExists(bundleDir)) {
 		await Deno.remove(bundleDir, {
 			recursive: true,
 		});
