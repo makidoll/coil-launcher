@@ -141,7 +141,7 @@ const updateFileJson = {
 	pub_date: new Date().toISOString(),
 	url: updateFileUrl,
 	signature: new TextDecoder().decode(updateSigFile.buffer),
-	notes: "No release notes",
+	notes: "",
 };
 
 const updateFilename = Deno.build.os + ".json";
