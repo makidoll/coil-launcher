@@ -48,8 +48,8 @@ async function makeBuild() {
 		installArgs.unshift("cmd", "/c");
 	}
 
-	const build = await new Deno.Command(installArgs[0], {
-		args: installArgs.slice(1),
+	const build = await new Deno.Command(buildArgs[0], {
+		args: buildArgs.slice(1),
 		cwd,
 		stdout: "inherit",
 		stderr: "inherit",
