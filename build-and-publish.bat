@@ -1,0 +1,1 @@
+deno run -A scripts/build-and-publish.ts
