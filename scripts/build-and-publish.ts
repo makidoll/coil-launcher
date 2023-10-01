@@ -43,7 +43,7 @@ async function makeBuild() {
 		cwd,
 	}).output();
 
-	const buildArgs = ["npm", "run", "tauri", "build"];
+	const buildArgs = ["yarn", "tauri", "build"];
 	if (Deno.build.os == "windows") {
 		installArgs.unshift("cmd", "/c");
 	}
