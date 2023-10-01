@@ -35,7 +35,8 @@ export default function TitleBar(props: {
 		<HStack
 			data-tauri-drag-region
 			w="100%"
-			h="36px"
+			minH="36px"
+			maxH="36px"
 			zIndex={9999999}
 			userSelect={"none"}
 			pointerEvents={"all"}

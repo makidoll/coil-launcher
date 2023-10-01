@@ -1,9 +1,9 @@
 import { Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { Game, useApplicationStore } from "./ApplicationStore";
+import { Game } from "./ApplicationStore";
 import TitleBar from "./components/TitleBar";
-import GamesGrid from "./pages/GamesGrid";
 import GameInfo from "./pages/GameInfo";
+import GamesGrid from "./pages/GamesGrid";
 
 function App() {
 	const [currentGame, setCurrentGame] = useState<Game>(null);
