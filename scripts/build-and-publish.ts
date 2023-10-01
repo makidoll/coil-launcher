@@ -7,7 +7,7 @@ import {
 	ObjectMetadata,
 } from "https://deno.land/x/s3_lite_client@0.6.1/client.ts";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 async function betterExists(path: string) {
 	try {
@@ -31,8 +31,13 @@ async function makeBuild() {
 		});
 	}
 
-	const build = await new Deno.Command("yarn", {
-		args: ["tauri", "build"],
+	const args = ["npm", "run", "tauri", "build"];
+	if (Deno.build.os == "windows") {
+		args.unshift("cmd", "/c");
+	}
+
+	const build = await new Deno.Command(args[0], {
+		args: args.slice(1),
 		cwd: path.resolve(__dirname, ".."),
 		stdout: "inherit",
 		stderr: "inherit",
