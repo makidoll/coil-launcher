@@ -31,14 +31,26 @@ async function makeBuild() {
 		});
 	}
 
-	const args = ["npm", "run", "tauri", "build"];
+	const cwd = path.resolve(__dirname, "..");
+
+	const installArgs = ["yarn"];
 	if (Deno.build.os == "windows") {
-		args.unshift("cmd", "/c");
+		installArgs.unshift("cmd", "/c");
 	}
 
-	const build = await new Deno.Command(args[0], {
-		args: args.slice(1),
-		cwd: path.resolve(__dirname, ".."),
+	await new Deno.Command(installArgs[0], {
+		args: installArgs.slice(1),
+		cwd,
+	}).output();
+
+	const buildArgs = ["npm", "run", "tauri", "build"];
+	if (Deno.build.os == "windows") {
+		installArgs.unshift("cmd", "/c");
+	}
+
+	const build = await new Deno.Command(installArgs[0], {
+		args: installArgs.slice(1),
+		cwd,
 		stdout: "inherit",
 		stderr: "inherit",
 		env: {
