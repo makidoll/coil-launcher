@@ -1,32 +1,38 @@
-import { Flex, Grid } from "@chakra-ui/react";
-import GameButton from "./GameButton";
-import TitleBar from "./TitleBar";
-import essenceBgImage from "./images/essence-bg-darker.png";
-import essenceTextImage from "./images/essence-text.png";
+import { Flex } from "@chakra-ui/react";
+import { useState } from "react";
+import { Game, useApplicationStore } from "./ApplicationStore";
+import TitleBar from "./components/TitleBar";
+import GamesGrid from "./pages/GamesGrid";
+import GameInfo from "./pages/GameInfo";
 
 function App() {
+	const [currentGame, setCurrentGame] = useState<Game>(null);
+
 	return (
 		<Flex
 			w="100vw"
 			h="100vh"
 			flexDir={"column"}
-			bg="#111"
+			bg="#222"
 			borderRadius={12}
 			userSelect={"none"}
 			overflow={"hidden"}
-			// pointerEvents={"none"}
 		>
-			<TitleBar />
-			<Grid
-				w="100%"
-				templateColumns="repeat(3, 1fr)"
-				gap={2}
-				p={2}
-				mt={-2}
-			>
-				<GameButton bg={essenceBgImage} logo={essenceTextImage} />
-				<GameButton name={"Unknown"} disabled />
-			</Grid>
+			<TitleBar
+				onGoBack={() => {
+					setCurrentGame(null);
+				}}
+				showGoBack={currentGame != null}
+			/>
+			{currentGame ? (
+				<GameInfo game={currentGame} />
+			) : (
+				<GamesGrid
+					onGame={game => {
+						setCurrentGame(game);
+					}}
+				/>
+			)}
 		</Flex>
 	);
 }
