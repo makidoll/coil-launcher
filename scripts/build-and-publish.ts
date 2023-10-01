@@ -21,6 +21,7 @@ async function betterExists(path: string) {
 
 async function makeBuild() {
 	// return "/home/maki/git/mechanyx-coil/src-tauri/target/release/bundle/";
+	// return "C:\\git\\coil\\src-tauri\\target\\release\\bundle\\";
 
 	const bundleDir = path.resolve(
 		__dirname,
@@ -74,7 +75,8 @@ const minio: ClientOptions = {
 	secretKey: "fg2DVcFlgQmz5LYc1RxgigIs8VP57tSwIAJzAw9p",
 	port: 443,
 	useSSL: true,
-	region: "us-east-1", // default for minio lmao
+	region: "",
+	pathStyle: true,
 };
 
 const allowedExts = [".AppImage", ".tar.gz", ".sig", ".zip", ".exe"];
@@ -151,10 +153,7 @@ filesToUpload.push({
 
 // upload files
 
-const s3Client = new S3Client({
-	...minio,
-	pathStyle: true,
-});
+const s3Client = new S3Client(minio);
 
 for (const file of filesToUpload) {
 	const object = "launcher/" + file.name;
@@ -168,10 +167,13 @@ for (const file of filesToUpload) {
 		metadata["Cache-Control"] = "no-cache";
 	}
 
-	await s3Client.putObject(object, file.buffer, {
-		bucketName: minio.bucket,
-		metadata,
-	});
+	try {
+		await s3Client.putObject(object, file.buffer, {
+			metadata,
+		});
 
-	console.log("Uploaded: " + file.name);
+		console.log("Uploaded: " + file.name);
+	} catch (error) {
+		console.error(error);
+	}
 }
