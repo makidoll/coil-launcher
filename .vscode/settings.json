@@ -1,6 +1,6 @@
 {
 	"deno.enable": true,
-	"deno.enablePaths": ["scripts"],
+	"deno.enablePaths": ["scripts", "functions"],
 	"deno.lint": false,
 	"deno.unstable": false
 }

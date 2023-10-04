@@ -68,72 +68,11 @@ const bundleDir = path.resolve(
 	isWindows ? "nsis" : "appimage",
 );
 
-// make update json file
-
 const version = JSON.parse(
 	await Deno.readTextFile(
 		path.resolve(__dirname, "../src-tauri/tauri.conf.json"),
 	),
 ).package.version;
-
-/*
-const updateFileExt = isWindows ? ".zip" : ".tar.gz";
-
-const updateFile = filesToUpload.find(f => f.name.endsWith(updateFileExt));
-if (updateFile == null) throw new Error(`Failed to find ${updateFileExt} file`);
-
-const updateSigFile = filesToUpload.find(f =>
-	f.name.endsWith(updateFileExt + ".sig"),
-);
-
-if (updateSigFile == null) {
-	throw new Error(`Failed to find ${updateFileExt}.sig file`);
-}
-
-const updateFileJson = {
-	version,
-	pub_date: new Date().toISOString(),
-	url: updateFileUrl,
-	signature: new TextDecoder().decode(updateSigFile.buffer),
-	notes: "",
-};
-
-const updateFilename = Deno.build.os + ".json";
-
-filesToUpload.push({
-	name: updateFilename,
-	buffer: new TextEncoder().encode(JSON.stringify(updateFileJson, null, 4)),
-});
-*/
-
-// upload files
-
-/*
-const s3Client = new S3Client(minio);
-
-for (const file of filesToUpload) {
-	const object = "launcher/" + file.name;
-
-	let metadata: ObjectMetadata = {
-		"Content-Type":
-			mime.getType(path.extname(file.name)) ?? "binary/octet-stream",
-	};
-
-	if (file.noCache) {
-		metadata["Cache-Control"] = "no-cache";
-	}
-
-	try {
-		await s3Client.putObject(object, file.buffer, {
-			metadata,
-		});
-
-		console.log("Uploaded: " + file.name);
-	} catch (error) {
-		console.error(error);
-	}
-}
-*/
 
 // init pocketbase
 
