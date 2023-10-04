@@ -1,7 +1,7 @@
 {
 	"name": "mechanyx-coil",
 	"private": true,
-	"version": "23.10.4-1248",
+	"version": "23.10.4-1318",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
