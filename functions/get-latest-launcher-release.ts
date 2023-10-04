@@ -51,7 +51,7 @@ async function handleLauncherUpdate(ctx: Context, url: URL) {
 
 	json(ctx, {
 		version: latest.version,
-		pub_date: latest.created,
+		pub_date: new Date(latest.created).toISOString(),
 		url: updateUrl,
 		signature: latest[osPrefixMap[reqOs] + "_sig"],
 		notes: "",
