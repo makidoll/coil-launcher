@@ -6,6 +6,8 @@ const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
 const isWindows = Deno.build.os == "windows";
 
+const debug = false;
+
 async function betterExists(path: string) {
 	try {
 		return await fs.exists(path);
@@ -20,7 +22,7 @@ async function makeBuild() {
 
 	const bundleDir = path.resolve(
 		__dirname,
-		"../src-tauri/target/release/bundle",
+		"../src-tauri/target/" + (debug ? "debug" : "release") + "/bundle",
 	);
 
 	if (await betterExists(bundleDir)) {
@@ -39,7 +41,7 @@ async function makeBuild() {
 		cwd,
 	}).output();
 
-	const buildArgs = ["yarn", "tauri", "build"];
+	const buildArgs = ["yarn", "tauri", "build", ...(debug ? ["--debug"] : [])];
 	if (isWindows) buildArgs.unshift("cmd", "/c");
 
 	const build = await new Deno.Command(buildArgs[0], {
