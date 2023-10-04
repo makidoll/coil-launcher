@@ -2937,9 +2937,8 @@ checksum = "9d0e916b1148c8e263850e1ebcbd046f333e0683c724876bb0da63ea4373dc8a"
 
 [[package]]
 name = "tauri"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72aee3277d0a0df01472cc704ab5934a51a1f25348838df17bfb3c5cb727880c"
+version = "1.5.1"
+source = "git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix#f6216122662e7665413e06769580b30afb36a479"
 dependencies = [
  "anyhow",
  "base64 0.21.4",
@@ -2974,7 +2973,7 @@ dependencies = [
  "tauri-macros",
  "tauri-runtime",
  "tauri-runtime-wry",
- "tauri-utils",
+ "tauri-utils 1.5.0 (git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix)",
  "tempfile",
  "thiserror",
  "time",
@@ -3001,7 +3000,7 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
- "tauri-utils",
+ "tauri-utils 1.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tauri-winres",
  "walkdir",
 ]
@@ -3009,8 +3008,7 @@ dependencies = [
 [[package]]
 name = "tauri-codegen"
 version = "1.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b3475e55acec0b4a50fb96435f19631fb58cbcd31923e1a213de5c382536bbb"
+source = "git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix#f6216122662e7665413e06769580b30afb36a479"
 dependencies = [
  "base64 0.21.4",
  "brotli",
@@ -3024,7 +3022,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "tauri-utils",
+ "tauri-utils 1.5.0 (git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix)",
  "thiserror",
  "time",
  "uuid",
@@ -3034,22 +3032,20 @@ dependencies = [
 [[package]]
 name = "tauri-macros"
 version = "1.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "613740228de92d9196b795ac455091d3a5fbdac2654abb8bb07d010b62ab43af"
+source = "git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix#f6216122662e7665413e06769580b30afb36a479"
 dependencies = [
  "heck 0.4.1",
  "proc-macro2",
  "quote",
  "syn 1.0.109",
  "tauri-codegen",
- "tauri-utils",
+ "tauri-utils 1.5.0 (git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix)",
 ]
 
 [[package]]
 name = "tauri-runtime"
 version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07f8e9e53e00e9f41212c115749e87d5cd2a9eebccafca77a19722eeecd56d43"
+source = "git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix#f6216122662e7665413e06769580b30afb36a479"
 dependencies = [
  "gtk",
  "http",
@@ -3058,7 +3054,7 @@ dependencies = [
  "raw-window-handle",
  "serde",
  "serde_json",
- "tauri-utils",
+ "tauri-utils 1.5.0 (git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix)",
  "thiserror",
  "url",
  "uuid",
@@ -3069,8 +3065,7 @@ dependencies = [
 [[package]]
 name = "tauri-runtime-wry"
 version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8141d72b6b65f2008911e9ef5b98a68d1e3413b7a1464e8f85eb3673bb19a895"
+source = "git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix#f6216122662e7665413e06769580b30afb36a479"
 dependencies = [
  "cocoa",
  "gtk",
@@ -3078,7 +3073,7 @@ dependencies = [
  "rand 0.8.5",
  "raw-window-handle",
  "tauri-runtime",
- "tauri-utils",
+ "tauri-utils 1.5.0 (git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix)",
  "uuid",
  "webkit2gtk",
  "webview2-com",
@@ -3091,6 +3086,34 @@ name = "tauri-utils"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "34d55e185904a84a419308d523c2c6891d5e2dbcee740c4997eb42e75a7b0f46"
+dependencies = [
+ "ctor",
+ "dunce",
+ "glob",
+ "heck 0.4.1",
+ "html5ever 0.26.0",
+ "infer",
+ "json-patch",
+ "kuchikiki",
+ "log",
+ "memchr",
+ "phf 0.10.1",
+ "proc-macro2",
+ "quote",
+ "semver",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "thiserror",
+ "url",
+ "walkdir",
+ "windows 0.39.0",
+]
+
+[[package]]
+name = "tauri-utils"
+version = "1.5.0"
+source = "git+https://github.com/makidrone/tauri.git?branch=tauri-v1.5.1-updater-fix#f6216122662e7665413e06769580b30afb36a479"
 dependencies = [
  "brotli",
  "ctor",
