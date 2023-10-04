@@ -99,7 +99,7 @@ app.use(async ctx => {
 	json(ctx, { error: "Not found" });
 });
 
-const port = 8000;
+const port = 8080;
 console.log("Listening on 0.0.0.0:" + port);
 
 await app.listen({ port });
