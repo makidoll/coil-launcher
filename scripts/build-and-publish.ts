@@ -167,8 +167,8 @@ for await (const filename of Deno.readDir(bundleDir)) {
 
 const fileExtToAttributeMap = [
 	{ ext: ".exe", attr: "nsis_setup" },
-	{ ext: ".exe.zip", attr: "nsis_update" },
-	{ ext: ".exe.zip.sig", attr: "nsis_sig", text: true },
+	{ ext: ".nsis.zip", attr: "nsis_update" },
+	{ ext: ".nsis.zip.sig", attr: "nsis_sig", text: true },
 	{ ext: ".AppImage", attr: "appimage_setup" },
 	{ ext: ".AppImage.tar.gz", attr: "appimage_update" },
 	{ ext: ".AppImage.tar.gz.sig", attr: "appimage_sig", text: true },
