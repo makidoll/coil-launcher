@@ -1,11 +1,6 @@
-import * as path from "https://deno.land/std@0.203.0/path/mod.ts";
 import * as fs from "https://deno.land/std@0.203.0/fs/mod.ts";
-import mime from "npm:mime";
-import { S3Client } from "https://deno.land/x/s3_lite_client@0.6.1/mod.ts";
-import {
-	ClientOptions,
-	ObjectMetadata,
-} from "https://deno.land/x/s3_lite_client@0.6.1/client.ts";
+import * as path from "https://deno.land/std@0.203.0/path/mod.ts";
+import PocketBase, { ClientResponseError, RecordModel } from "npm:pocketbase";
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 
@@ -20,7 +15,7 @@ async function betterExists(path: string) {
 }
 
 async function makeBuild() {
-	// return "/home/maki/git/mechanyx-coil/src-tauri/target/release/bundle/";
+	return "/home/maki/git/mechanyx-coil/src-tauri/target/release/bundle/";
 	// return "C:\\git\\coil\\src-tauri\\target\\release\\bundle\\";
 
 	const bundleDir = path.resolve(
@@ -68,44 +63,10 @@ async function makeBuild() {
 
 // https://tauri.app/v1/guides/distribution/updater
 
-const minio: ClientOptions = {
-	bucket: "mechanyx-coil",
-	endPoint: "minio.hotmilk.space",
-	accessKey: "coil-launcher-put",
-	secretKey: "fg2DVcFlgQmz5LYc1RxgigIs8VP57tSwIAJzAw9p",
-	port: 443,
-	useSSL: true,
-	region: "",
-	pathStyle: true,
-};
-
-const allowedExts = [".AppImage", ".tar.gz", ".sig", ".zip", ".exe"];
-
 const bundleDir = path.resolve(
 	await makeBuild(),
 	isWindows ? "nsis" : "appimage",
 );
-
-const filesToUpload: {
-	name: string;
-	buffer: Uint8Array;
-	noCache?: boolean;
-}[] = [];
-
-for await (const file of Deno.readDir(bundleDir)) {
-	if (!file.isFile) continue;
-
-	for (const ext of allowedExts) {
-		if (!file.name.endsWith(ext)) continue;
-
-		const buffer = await Deno.readFile(path.resolve(bundleDir, file.name));
-
-		filesToUpload.push({
-			name: file.name,
-			buffer,
-		});
-	}
-}
 
 // make update json file
 
@@ -115,6 +76,7 @@ const version = JSON.parse(
 	),
 ).package.version;
 
+/*
 const updateFileExt = isWindows ? ".zip" : ".tar.gz";
 
 const updateFile = filesToUpload.find(f => f.name.endsWith(updateFileExt));
@@ -127,14 +89,6 @@ const updateSigFile = filesToUpload.find(f =>
 if (updateSigFile == null) {
 	throw new Error(`Failed to find ${updateFileExt}.sig file`);
 }
-
-const updateFileUrl =
-	"https://" +
-	minio.endPoint +
-	"/" +
-	minio.bucket +
-	"/launcher/" +
-	updateFile?.name;
 
 const updateFileJson = {
 	version,
@@ -150,9 +104,11 @@ filesToUpload.push({
 	name: updateFilename,
 	buffer: new TextEncoder().encode(JSON.stringify(updateFileJson, null, 4)),
 });
+*/
 
 // upload files
 
+/*
 const s3Client = new S3Client(minio);
 
 for (const file of filesToUpload) {
@@ -177,3 +133,67 @@ for (const file of filesToUpload) {
 		console.error(error);
 	}
 }
+*/
+
+// init pocketbase
+
+const pb = new PocketBase("https://coil.mechanyx.co");
+
+await pb.admins.authWithPassword(
+	"build@mechanyx.localhost",
+	"fcDVeV0CxONEYU7gJNSvOElPYlMQ9jH7",
+);
+
+const launcher = pb.collection("launcher");
+
+async function getDbEntry(version: string): Promise<RecordModel> {
+	try {
+		return await launcher.getFirstListItem('version="' + version + '"');
+	} catch (error) {
+		if (error instanceof ClientResponseError && error.data.code == 404) {
+			return await launcher.create({ version });
+		} else {
+			throw error;
+		}
+	}
+}
+
+// find files and map them
+
+const filesInBundleDir: string[] = [];
+for await (const filename of Deno.readDir(bundleDir)) {
+	if (filename.isFile) filesInBundleDir.push(filename.name);
+}
+
+const fileExtToAttributeMap = [
+	{ ext: ".exe", attr: "nsis_setup" },
+	{ ext: ".exe.zip", attr: "nsis_update" },
+	{ ext: ".exe.zip.sig", attr: "nsis_sig", text: true },
+	{ ext: ".AppImage", attr: "appimage_setup" },
+	{ ext: ".AppImage.tar.gz", attr: "appimage_update" },
+	{ ext: ".AppImage.tar.gz.sig", attr: "appimage_sig", text: true },
+];
+
+let versionEntry = await getDbEntry(version);
+
+for (const { ext, attr, text } of fileExtToAttributeMap) {
+	const filename = filesInBundleDir.find(name => name.endsWith(ext));
+	if (filename == null) continue;
+
+	const filePath = path.resolve(bundleDir, filename);
+
+	const formData = new FormData();
+
+	if (text) {
+		formData.set(attr, await Deno.readTextFile(filePath), filename);
+	} else {
+		formData.set(attr, new Blob([await Deno.readFile(filePath)]), filename);
+	}
+
+	versionEntry = await launcher.update(versionEntry.id, formData);
+	console.log("Uploaded: " + filename);
+}
+
+// upload!
+
+console.log(versionEntry);
