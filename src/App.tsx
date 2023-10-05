@@ -20,7 +20,7 @@ function App() {
 			h="calc(100vh - 2px)"
 			flexDir={"column"}
 			bg="#15171e"
-			borderRadius={"10px"}
+			borderRadius={"8px"}
 			userSelect={"none"}
 			overflow={"hidden"}
 			outline={"solid 1px #424242"}
