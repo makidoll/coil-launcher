@@ -4,6 +4,7 @@ import { Game } from "./ApplicationStore";
 import TitleBar from "./components/TitleBar";
 import GameInfo from "./pages/GameInfo";
 import GamesGrid from "./pages/GamesGrid";
+import LoginScreen from "./pages/LoginScreen";
 
 function App() {
 	const [currentGame, setCurrentGame] = useState<Game>(null);
@@ -22,9 +23,11 @@ function App() {
 				onGoBack={() => {
 					setCurrentGame(null);
 				}}
+				showLogo={false}
 				showGoBack={currentGame != null}
 			/>
-			{currentGame ? (
+			<LoginScreen />
+			{/* {currentGame ? (
 				<GameInfo game={currentGame} />
 			) : (
 				<GamesGrid
@@ -32,7 +35,7 @@ function App() {
 						setCurrentGame(game);
 					}}
 				/>
-			)}
+			)} */}
 		</Flex>
 	);
 }

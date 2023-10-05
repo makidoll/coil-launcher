@@ -10,6 +10,7 @@ import {
 import { appWindow } from "@tauri-apps/api/window";
 import { FaArrowLeft, FaArrowsRotate, FaXmark } from "react-icons/fa6";
 import { SiSpringCreators } from "react-icons/si";
+import MechanyxCoilLogo from "./MechanyxCoilLogo";
 
 function TitleBarButton(props: IconButtonProps) {
 	return (
@@ -29,6 +30,7 @@ function TitleBarButton(props: IconButtonProps) {
 
 export default function TitleBar(props: {
 	showGoBack: boolean;
+	showLogo: boolean;
 	onGoBack: () => any;
 }) {
 	return (
@@ -40,6 +42,7 @@ export default function TitleBar(props: {
 			zIndex={9999999}
 			userSelect={"none"}
 			pointerEvents={"all"}
+			// bg={"red"}
 		>
 			<HStack
 				w="100%"
@@ -58,23 +61,19 @@ export default function TitleBar(props: {
 				) : (
 					<></>
 				)}
-				<Icon as={SiSpringCreators} h={"100%"} cursor={"pointer"} />
-				<Text
-					fontWeight={900}
-					mt={-0.5}
-					letterSpacing={"-0.5px"}
-					fontSize={"lg"}
-				>
-					Mechaynx Coil
-				</Text>
+				{props.showLogo ? (
+					<MechanyxCoilLogo color="#fff" h="22px" ml="6px" />
+				) : (
+					<></>
+				)}
 				<Box flexGrow={1}></Box>
-				<TitleBarButton
+				{/* <TitleBarButton
 					aria-label="Reload"
 					icon={<FaArrowsRotate color="#ccc" size={18} />}
 					onClick={() => {
 						alert("refresh games");
 					}}
-				/>
+				/> */}
 				<TitleBarButton
 					aria-label="Close"
 					icon={<FaXmark color="#ccc" size={22} />}

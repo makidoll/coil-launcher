@@ -1,6 +1,7 @@
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { Game } from "../ApplicationStore";
 import GameTitle from "../components/GameTitle";
+import MechanyxButton from "../components/MechanyxButton";
 
 export default function GameInfo(props: { game: Game }) {
 	return (
@@ -18,7 +19,7 @@ export default function GameInfo(props: { game: Game }) {
 				<GameTitle game={props.game} />
 			</Flex>
 			<Flex p={4} flexDir={"column"} alignItems={"start"} h={"100%"}>
-				<Button
+				{/* <Button
 					colorScheme="blue"
 					w="250px"
 					fontWeight={800}
@@ -28,7 +29,8 @@ export default function GameInfo(props: { game: Game }) {
 					mb={4}
 				>
 					PLAY NOW
-				</Button>
+				</Button> */}
+				<MechanyxButton>PLAY NOW</MechanyxButton>
 				<Text>Made by Melody and Maki</Text>
 				{/* <Box flexGrow={1}></Box> */}
 			</Flex>
