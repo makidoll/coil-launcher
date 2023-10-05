@@ -7,7 +7,7 @@ export default function GameInfo(props: { game: Game }) {
 	return (
 		<Flex flexDir={"column"} h={"100%"}>
 			<Flex
-				h={"96px"}
+				h={"128px"}
 				w="100%"
 				backgroundImage={props.game.bgUrl}
 				backgroundPosition={"center"}

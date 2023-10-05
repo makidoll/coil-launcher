@@ -57,7 +57,7 @@ export default function GamesGrid(props: { onGame: (game: Game) => any }) {
 	const app = useApplicationStore();
 
 	return (
-		<Grid w="100%" templateColumns="repeat(3, 1fr)" gap={2} p={2} mt={-2}>
+		<Grid w="100%" templateColumns="repeat(4, 1fr)" gap={2} p={2} mt={-2}>
 			{app.games.map((game, i) => (
 				<GameButton
 					game={game}

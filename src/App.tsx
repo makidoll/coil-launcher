@@ -5,8 +5,11 @@ import TitleBar from "./components/TitleBar";
 import GameInfo from "./pages/GameInfo";
 import GamesGrid from "./pages/GamesGrid";
 import LoginScreen from "./pages/LoginScreen";
+import { useAuthStore } from "./AuthStore";
 
 function App() {
+	const auth = useAuthStore(({ loggedIn }) => ({ loggedIn }));
+
 	const [currentGame, setCurrentGame] = useState<Game>(null);
 
 	return (
@@ -23,19 +26,21 @@ function App() {
 				onGoBack={() => {
 					setCurrentGame(null);
 				}}
-				showLogo={false}
 				showGoBack={currentGame != null}
 			/>
-			<LoginScreen />
-			{/* {currentGame ? (
-				<GameInfo game={currentGame} />
+			{auth.loggedIn ? (
+				currentGame ? (
+					<GameInfo game={currentGame} />
+				) : (
+					<GamesGrid
+						onGame={game => {
+							setCurrentGame(game);
+						}}
+					/>
+				)
 			) : (
-				<GamesGrid
-					onGame={game => {
-						setCurrentGame(game);
-					}}
-				/>
-			)} */}
+				<LoginScreen />
+			)}
 		</Flex>
 	);
 }

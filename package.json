@@ -17,7 +17,9 @@
 		"@emotion/styled": "^11.11.0",
 		"@fontsource/inter": "^5.0.8",
 		"@tauri-apps/api": "^1.5.0",
+		"formik": "^2.4.5",
 		"framer-motion": "^10.16.4",
+		"identicon.js": "^2.3.3",
 		"pocketbase": "^0.18.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
@@ -26,6 +28,7 @@
 	},
 	"devDependencies": {
 		"@tauri-apps/cli": "^1.5.0",
+		"@types/identicon.js": "^2.3.2",
 		"@types/react": "^18.2.15",
 		"@types/react-dom": "^18.2.7",
 		"@vitejs/plugin-react": "^4.0.3",

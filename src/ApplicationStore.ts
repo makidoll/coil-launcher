@@ -16,24 +16,6 @@ interface ApplicationState {
 export const useApplicationStore = create<ApplicationState>()(set => ({
 	games: [
 		{
-			name: "Unknown",
-			bgUrl: "",
-			logoUrl: "",
-			available: false,
-		},
-		{
-			name: "Unknown",
-			bgUrl: "",
-			logoUrl: "",
-			available: false,
-		},
-		{
-			name: "Unknown",
-			bgUrl: "",
-			logoUrl: "",
-			available: false,
-		},
-		{
 			name: "Essence",
 			bgUrl: essenceBg,
 			logoUrl: essenceLogo,

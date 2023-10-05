@@ -1,53 +1,91 @@
-import {
-	Center,
-	Flex,
-	HStack,
-	Icon,
-	Input,
-	Text,
-	VStack,
-} from "@chakra-ui/react";
-import { useCallback, useRef, useState } from "react";
-import { SiSpringCreators } from "react-icons/si";
+import { Center, Flex, Input, Text, VStack } from "@chakra-ui/react";
+import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../AuthStore";
-import MechanyxButton from "../components/MechanyxButton";
 import MechanyxCoilLogo from "../components/MechanyxCoilLogo";
+import MechanyxButton from "../components/MechanyxButton";
+
+const validate = (values: any) => {
+	const errors: any = {};
+
+	if (!values.usernameOrEmail) {
+		errors.usernameOrEmail = "Required";
+	}
+
+	if (!values.password) {
+		errors.password = "Required";
+	}
+
+	return errors;
+};
 
 export default function LoginScreen() {
-	const auth = useAuthStore();
-	const usernameOrEmailRef = useRef<HTMLInputElement>();
-	const passwordRef = useRef<HTMLInputElement>();
+	const auth = useAuthStore(({ login, autoLogin, logout }) => ({
+		login,
+		autoLogin,
+		logout,
+	}));
+
+	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 
-	const loginWithCreds = useCallback(async () => {
-		const res = await auth.loginWithPassword(
-			usernameOrEmailRef.current.value,
-			passwordRef.current.value,
-		);
+	useEffect(() => {
+		(async () => {
+			const res = await auth.autoLogin();
+			setError(res.error);
+			setLoading(false);
+		})();
+	}, []);
 
-		setError(res.error);
-	}, [auth, usernameOrEmailRef, passwordRef, setError]);
-
-	// TODO: add loading, disabling input, and pressing enter. basically formik
+	const formik = useFormik({
+		initialValues: {
+			usernameOrEmail: "",
+			password: "",
+		},
+		validate,
+		onSubmit: async values => {
+			setLoading(true);
+			const res = await auth.login(
+				values.usernameOrEmail,
+				values.password,
+			);
+			setError(res.error);
+			setLoading(false);
+		},
+	});
 
 	return (
 		<Flex w={"100%"} h={"100%"} flexDir={"column"}>
 			<Center flexGrow={1}>
-				<VStack w={"300px"} spacing={2} mt={-8}>
-					<MechanyxCoilLogo color="#fff" w="100%" />
-					<Input
-						ref={usernameOrEmailRef}
-						placeholder="Username or Email"
-					/>
-					<Input
-						ref={passwordRef}
-						placeholder="Password"
-						type="password"
-					/>
-					<MechanyxButton mt={2} w="100%" onClick={loginWithCreds}>
-						Login
-					</MechanyxButton>
-				</VStack>
+				<form onSubmit={formik.handleSubmit}>
+					<VStack w={"300px"} spacing={2} mt={-8}>
+						<MechanyxCoilLogo fill="#fff" w="100%" mb={1} />
+						<Input
+							placeholder="Username or Email"
+							name="usernameOrEmail"
+							onChange={formik.handleChange}
+							value={formik.values.usernameOrEmail}
+							disabled={loading}
+						/>
+						<Input
+							placeholder="Password"
+							type="password"
+							name="password"
+							onChange={formik.handleChange}
+							value={formik.values.password}
+							disabled={loading}
+						/>
+						<MechanyxButton
+							mt={2}
+							w="100%"
+							type="submit"
+							isLoading={loading}
+							isDisabled={!formik.dirty || !formik.isValid}
+						>
+							Login
+						</MechanyxButton>
+					</VStack>
+				</form>
 			</Center>
 			{error ? (
 				<Center w="100%" minH="48px" maxH="48px" background={"red.500"}>

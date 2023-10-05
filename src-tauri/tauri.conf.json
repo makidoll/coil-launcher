@@ -59,10 +59,10 @@
 		"windows": [
 			{
 				"fullscreen": false,
-				"resizable": true,
+				"resizable": false,
 				"title": "Mechanyx Coil",
-				"width": 600,
-				"height": 400,
+				"width": 800,
+				"height": 500,
 				"decorations": false,
 				"transparent": true
 			}
