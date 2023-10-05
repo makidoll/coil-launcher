@@ -19,11 +19,11 @@ function App() {
 			w="calc(100vw - 2px)"
 			h="calc(100vh - 2px)"
 			flexDir={"column"}
-			bg="#222"
-			borderRadius={12}
+			bg="#15171e"
+			borderRadius={"10px"}
 			userSelect={"none"}
 			overflow={"hidden"}
-			outline={"solid 1px #363636"}
+			outline={"solid 1px #424242"}
 		>
 			<TitleBar
 				onGoBack={() => {
