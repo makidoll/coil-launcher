@@ -14,13 +14,16 @@ function App() {
 
 	return (
 		<Flex
-			w="100vw"
-			h="100vh"
+			ml="1px"
+			mt="1px"
+			w="calc(100vw - 2px)"
+			h="calc(100vh - 2px)"
 			flexDir={"column"}
 			bg="#222"
 			borderRadius={12}
 			userSelect={"none"}
 			overflow={"hidden"}
+			outline={"solid 1px #363636"}
 		>
 			<TitleBar
 				onGoBack={() => {

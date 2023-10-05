@@ -24,7 +24,8 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 			}
 			transition={"all 100ms ease-out"}
 			cursor={disabled ? "default" : "pointer"}
-			shadow={"2xl"}
+			// shadow={"2xl"}
+			// outline={"solid 1px rgba(255,255,255,0.1)"}
 			onClick={props.onClick}
 		>
 			<Flex w="100%" h="100%" flexDir={"column"} justifyContent={"end"}>
