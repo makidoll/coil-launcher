@@ -1404,11 +1404,6 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
-"@types/identicon.js@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@types/identicon.js/-/identicon.js-2.3.2.tgz#d761352bcc2912f9f506dd8c5cb4a04bb8e5b70d"
-  integrity sha512-YAdDaAQlEOj1QISXL04MFwE5R1Wy8T1iK7Q4tkMkYbCsXTvHykkFpGyardAyJLPSM3IpFR/UhESLma4UELc/uQ==
-
 "@types/lodash.mergewith@4.6.7":
   version "4.6.7"
   resolved "https://registry.npmjs.org/@types/lodash.mergewith/-/lodash.mergewith-4.6.7.tgz"
@@ -1502,6 +1497,11 @@ babel-plugin-macros@^3.1.0:
     "@babel/runtime" "^7.12.5"
     cosmiconfig "^7.0.0"
     resolve "^1.19.0"
+
+boring-avatars@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.yarnpkg.com/boring-avatars/-/boring-avatars-1.10.1.tgz#0e40811043cb3412bee38a0b6ca14f85fcdb0d2b"
+  integrity sha512-WcgHDeLrazCR03CDPEvCchLsUecZAZvs4F6FnMiGlTEjyQQf15Q5TRl4EUaAQ1dacvhPq7lC9EOTWkCojQ6few==
 
 browserslist@^4.21.9:
   version "4.22.1"
@@ -1751,11 +1751,6 @@ hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1:
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   dependencies:
     react-is "^16.7.0"
-
-identicon.js@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/identicon.js/-/identicon.js-2.3.3.tgz#c505b8d60ecc6ea13bbd991a33964c44c1ad60a1"
-  integrity sha512-/qgOkXKZ7YbeCYbawJ9uQQ3XJ3uBg9VDpvHjabCAPp6aRMhjLaFAxG90+1TxzrhKaj6AYpVGrx6UXQfQA41UEA==
 
 import-fresh@^3.2.1:
   version "3.3.0"

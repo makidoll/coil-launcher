@@ -1,5 +1,6 @@
-import Identicon from "identicon.js";
+import Avatar from "boring-avatars";
 import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
+import { renderToString } from "react-dom/server";
 import { create } from "zustand";
 
 const pb = new PocketBase("https://coil.mechanyx.co");
@@ -46,14 +47,17 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 				loggedIn: true,
 				username: authData.record.username,
 				avatarUrl:
-					"data:image/png;base64," +
-					new Identicon(authData.record.id, {
-						foreground: [255, 255, 255, 255],
-						background: [0, 0, 0, 255],
-						margin: 0.2,
-						size: 128,
-						format: "png",
-					}).toString(),
+					"data:image/svg+xml;base64," +
+					btoa(
+						renderToString(
+							Avatar({
+								size: 128,
+								name: authData.record.id,
+								square: true,
+								variant: "beam",
+							}),
+						),
+					),
 				token: authData.token,
 			});
 
