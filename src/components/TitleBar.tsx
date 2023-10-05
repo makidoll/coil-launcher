@@ -84,7 +84,7 @@ export default function TitleBar(props: {
 					<>
 						<MechanyxCoilLogo fill="#fff" h="22px" ml="6px" />
 						<Box flexGrow={1}></Box>
-						<Menu zIndex={9500}>
+						<Menu>
 							<MenuButton
 								as={Button}
 								size="sm"
@@ -121,7 +121,7 @@ export default function TitleBar(props: {
 								pointerEvents={"all"}
 								bg="#222"
 								shadow={"lg"}
-								zIndex={99999999999999999}
+								zIndex={9500}
 							>
 								<MenuItem
 									bg="#222"
