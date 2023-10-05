@@ -113,7 +113,7 @@ export default function TitleBar(props: {
 										ml={"-12px"}
 									/>
 									<chakra.span fontWeight={800} mx={1}>
-										Maki
+										{auth.username}
 									</chakra.span>
 								</HStack>
 							</MenuButton>
