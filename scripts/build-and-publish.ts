@@ -33,15 +33,17 @@ async function makeBuild() {
 
 	const cwd = path.resolve(__dirname, "..");
 
-	const installArgs = ["yarn"];
+	const installArgs = ["pnpm", "install", "--frozen-lockfile"];
 	if (isWindows) installArgs.unshift("cmd", "/c");
 
 	await new Deno.Command(installArgs[0], {
 		args: installArgs.slice(1),
 		cwd,
+		stdout: "inherit",
+		stderr: "inherit",
 	}).output();
 
-	const buildArgs = ["yarn", "tauri", "build", ...(debug ? ["--debug"] : [])];
+	const buildArgs = ["pnpm", "tauri", "build", ...(debug ? ["--debug"] : [])];
 	if (isWindows) buildArgs.unshift("cmd", "/c");
 
 	const build = await new Deno.Command(buildArgs[0], {
