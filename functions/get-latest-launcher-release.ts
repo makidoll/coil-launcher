@@ -47,13 +47,13 @@ async function handleLauncherUpdate(ctx: Context, url: URL) {
 		"/" +
 		latest.id +
 		"/" +
-		latest[osPrefixMap[reqOs] + "_update"];
+		latest[osPrefixMap[reqOs] + "Update"];
 
 	json(ctx, {
 		version: latest.version,
 		pub_date: new Date(latest.created).toISOString(),
 		url: updateUrl,
-		signature: latest[osPrefixMap[reqOs] + "_sig"],
+		signature: latest[osPrefixMap[reqOs] + "Sig"],
 		notes: "",
 	});
 }
@@ -76,7 +76,7 @@ async function handleLauncherDownload(ctx: Context, os: string) {
 		"/" +
 		latest.id +
 		"/" +
-		latest[osPrefixMap[os] + "_setup"];
+		latest[osPrefixMap[os] + "Setup"];
 
 	// json(ctx, { url: setupUrl });
 

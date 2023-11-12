@@ -109,12 +109,12 @@ for await (const filename of Deno.readDir(bundleDir)) {
 }
 
 const fileExtToAttributeMap = [
-	{ ext: ".exe", attr: "nsis_setup" },
-	{ ext: ".nsis.zip", attr: "nsis_update" },
-	{ ext: ".nsis.zip.sig", attr: "nsis_sig", text: true },
-	{ ext: ".AppImage", attr: "appimage_setup" },
-	{ ext: ".AppImage.tar.gz", attr: "appimage_update" },
-	{ ext: ".AppImage.tar.gz.sig", attr: "appimage_sig", text: true },
+	{ ext: ".exe", attr: "nsisSetup" },
+	{ ext: ".nsis.zip", attr: "nsisUpdate" },
+	{ ext: ".nsis.zip.sig", attr: "nsisSig", text: true },
+	{ ext: ".AppImage", attr: "appimageSetup" },
+	{ ext: ".AppImage.tar.gz", attr: "appimageUpdate" },
+	{ ext: ".AppImage.tar.gz.sig", attr: "appimageSig", text: true },
 ];
 
 let versionEntry = await getDbEntry(version);
