@@ -9,7 +9,7 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 		<GridItem
 			h="114px"
 			backgroundImage={props.game.bgUrl}
-			backgroundColor={"brandBehind.600"}
+			backgroundColor={disabled ? "brandBehind.700" : "brandBehind.600"}
 			backgroundSize={"cover"}
 			backgroundPosition={"center"}
 			borderRadius={12}

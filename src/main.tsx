@@ -16,6 +16,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { hsv, hsvMix, hsvPaletteToHex, printHsvPalette } from "./color-utils";
+import { generateStripe } from "@chakra-ui/theme-tools";
 
 if (globalThis.localStorage != null) {
 	globalThis.localStorage.setItem("chakra-ui-color-mode", "dark");
@@ -39,26 +40,12 @@ const brandBehind = {
 
 // printHsvPalette(brandBehind);
 
+console.log(generateStripe("1rem", "green"));
+
 const theme = extendTheme(
 	{
 		initialColorMode: "dark",
 		useSystemColorMode: false,
-		components: {
-			// Heading: {
-			// 	baseStyle: {
-			// 		// letterSpacing: "-0.05em",
-			// 		fontWeight: "400",
-			// 	},
-			// },
-			Link: {
-				baseStyle: {
-					color: "brand.500",
-					_hover: {
-						textDecoration: "none",
-					},
-				},
-			},
-		},
 		colors: {
 			// tomorrow: "#1d1f21",
 			// hexcorp: "#ff64ff",
@@ -95,6 +82,33 @@ const theme = extendTheme(
 		fonts: {
 			heading: "Inter",
 			body: "Inter",
+		},
+		components: {
+			// Heading: {
+			// 	baseStyle: {
+			// 		// letterSpacing: "-0.05em",
+			// 		fontWeight: "400",
+			// 	},
+			// },
+			Link: {
+				baseStyle: {
+					color: "brand.500",
+					_hover: {
+						textDecoration: "none",
+					},
+				},
+			},
+			Progress: {
+				baseStyle: {
+					track: {
+						bg: "brandBehind.700",
+					},
+					filledTrack: {
+						backgroundColor: "brand.500",
+						...generateStripe("1rem", "rgba(255,255,255,0.2)"),
+					},
+				},
+			},
 		},
 	},
 	withDefaultColorScheme({
