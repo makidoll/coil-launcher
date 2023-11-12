@@ -1,7 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { Game } from "../ApplicationStore";
 import GameTitle from "../components/GameTitle";
-import MechanyxButton from "../components/MechanyxButton";
+import StandardButton from "../components/StandardButton";
 
 export default function GameInfo(props: { game: Game }) {
 	return (
@@ -30,7 +30,7 @@ export default function GameInfo(props: { game: Game }) {
 				>
 					PLAY NOW
 				</Button> */}
-				<MechanyxButton>PLAY NOW</MechanyxButton>
+				<StandardButton>PLAY NOW</StandardButton>
 				<Text>Made by Melody and Maki</Text>
 				{/* <Box flexGrow={1}></Box> */}
 			</Flex>

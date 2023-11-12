@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 
-export default function MechanyxButton(props: ButtonProps) {
+export default function StandardButton(props: ButtonProps) {
 	return (
 		<Button
 			{...props}

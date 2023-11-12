@@ -21,6 +21,7 @@ import { FaArrowLeft, FaArrowsRotate, FaXmark } from "react-icons/fa6";
 import { SiSpringCreators } from "react-icons/si";
 import MechanyxCoilLogo from "./MechanyxCoilLogo";
 import { useAuthStore } from "../AuthStore";
+import { chakraColor } from "../utils";
 
 function TitleBarIconButton(props: IconButtonProps) {
 	return (
@@ -32,10 +33,10 @@ function TitleBarIconButton(props: IconButtonProps) {
 			maxH="30px"
 			pointerEvents={"all"}
 			borderRadius={8}
-			background={"#333"}
+			background={"brandBehind.700"}
 			{...props}
 			_hover={{
-				background: "#444",
+				background: "brandBehind.600",
 			}}
 		/>
 	);
@@ -73,7 +74,12 @@ export default function TitleBar(props: {
 				{props.showGoBack ? (
 					<TitleBarIconButton
 						aria-label="Return"
-						icon={<FaArrowLeft color="#ccc" size={18} />}
+						icon={
+							<FaArrowLeft
+								color={chakraColor("brandBehind.50")}
+								size={18}
+							/>
+						}
 						onClick={props.onGoBack}
 						mr={1}
 					/>
@@ -94,14 +100,14 @@ export default function TitleBar(props: {
 								maxH="30px"
 								pointerEvents={"all"}
 								borderRadius={8}
-								background={"#333"}
+								background={"brandBehind.700"}
 								// color={"#fff"}
-								color="#ccc"
+								color={chakraColor("brandBehind.50")}
 								_hover={{
-									background: "#444",
+									background: "brandBehind.600",
 								}}
 								_active={{
-									background: "#444",
+									background: "brandBehind.600",
 								}}
 								fontWeight={600}
 								overflow={"hidden"}
@@ -119,13 +125,13 @@ export default function TitleBar(props: {
 							</MenuButton>
 							<MenuList
 								pointerEvents={"all"}
-								bg="#222"
+								bg="brandBehind.800"
 								shadow={"lg"}
 								zIndex={9500}
 							>
 								<MenuItem
-									bg="#222"
-									_hover={{ bg: "#333" }}
+									bg="brandBehind.800"
+									_hover={{ bg: "brandBehind.700" }}
 									onClick={auth.logout}
 								>
 									Logout
@@ -135,7 +141,7 @@ export default function TitleBar(props: {
 						</Menu>
 						{/* <TitleBarButton
 							aria-label="Reload"
-							icon={<FaArrowsRotate color="#ccc" size={18} />}
+							icon={<FaArrowsRotate size={18} />}
 							onClick={() => {
 								alert("refresh games");
 							}}
@@ -149,7 +155,12 @@ export default function TitleBar(props: {
 				)}
 				<TitleBarIconButton
 					aria-label="Close"
-					icon={<FaXmark color="#ccc" size={22} />}
+					icon={
+						<FaXmark
+							color={chakraColor("brandBehind.50")}
+							size={22}
+						/>
+					}
 					onClick={() => {
 						appWindow.close();
 					}}

@@ -41,8 +41,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 				authData = await pb.collection("users").authRefresh();
 			}
 
-			console.log(authData);
-
 			set({
 				loggedIn: true,
 				username: authData.record.username,

@@ -9,7 +9,7 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 		<GridItem
 			h="114px"
 			backgroundImage={props.game.bgUrl}
-			backgroundColor={"rgba(255,255,255,0.3)"}
+			backgroundColor={"brandBehind.600"}
 			backgroundSize={"cover"}
 			backgroundPosition={"center"}
 			borderRadius={12}
@@ -26,7 +26,7 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 			cursor={disabled ? "default" : "pointer"}
 			// shadow={"2xl"}
 			// outline={"solid 1px rgba(255,255,255,0.1)"}
-			onClick={props.onClick}
+			onClick={disabled ? null : props.onClick}
 		>
 			<Flex w="100%" h="100%" flexDir={"column"} justifyContent={"end"}>
 				<Box pl={2} pb={2}>
@@ -61,6 +61,7 @@ export default function GamesGrid(props: { onGame: (game: Game) => any }) {
 		<Grid w="100%" templateColumns="repeat(4, 1fr)" gap={2} p={2} mt={-2}>
 			{app.games.map((game, i) => (
 				<GameButton
+					key={i}
 					game={game}
 					onClick={() => {
 						props.onGame(game);

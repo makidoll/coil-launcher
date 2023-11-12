@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../AuthStore";
 import MechanyxCoilLogo from "../components/MechanyxCoilLogo";
-import MechanyxButton from "../components/MechanyxButton";
+import StandardButton from "../components/StandardButton";
 
 const validate = (values: any) => {
 	const errors: any = {};
@@ -75,7 +75,7 @@ export default function LoginScreen() {
 							value={formik.values.password}
 							disabled={loading}
 						/>
-						<MechanyxButton
+						<StandardButton
 							mt={2}
 							w="100%"
 							type="submit"
@@ -83,7 +83,7 @@ export default function LoginScreen() {
 							isDisabled={!formik.dirty || !formik.isValid}
 						>
 							Login
-						</MechanyxButton>
+						</StandardButton>
 					</VStack>
 				</form>
 			</Center>

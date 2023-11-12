@@ -14,16 +14,14 @@ function App() {
 
 	return (
 		<Flex
-			ml="1px"
-			mt="1px"
-			w="calc(100vw - 2px)"
-			h="calc(100vh - 2px)"
+			w="100vw"
+			h="100vh"
 			flexDir={"column"}
-			bg="#15171e"
-			borderRadius={"8px"}
 			userSelect={"none"}
 			overflow={"hidden"}
-			outline={"solid 1px #424242"}
+			borderRadius={"12px"}
+			bg="brandBehind.900"
+			border={"solid 1px var(--chakra-colors-brandBehind-700)"}
 		>
 			<TitleBar
 				onGoBack={() => {
