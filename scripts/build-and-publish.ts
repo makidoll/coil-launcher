@@ -117,15 +117,22 @@ const fileExtToAttributeMap = [
 	{ ext: ".AppImage.tar.gz.sig", attr: "appimageSig", text: true },
 ];
 
-let versionEntry = await getDbEntry(version);
+let versionRecord = await getDbEntry(version);
+
+const formData = new FormData();
 
 for (const { ext, attr, text } of fileExtToAttributeMap) {
 	const filename = filesInBundleDir.find(name => name.endsWith(ext));
 	if (filename == null) continue;
 
-	const filePath = path.resolve(bundleDir, filename);
+	if (versionRecord[attr] != "") {
+		console.log(
+			`Error: Already uploaded "${attr}" to version "${version}"`,
+		);
+		Deno.exit(1);
+	}
 
-	const formData = new FormData();
+	const filePath = path.resolve(bundleDir, filename);
 
 	if (text) {
 		formData.set(attr, await Deno.readTextFile(filePath), filename);
@@ -133,10 +140,12 @@ for (const { ext, attr, text } of fileExtToAttributeMap) {
 		formData.set(attr, new Blob([await Deno.readFile(filePath)]), filename);
 	}
 
-	versionEntry = await launcher.update(versionEntry.id, formData);
-	console.log("Uploaded: " + filename);
+	console.log("Adding: " + filename);
 }
+
+console.log("Uploading...");
+versionRecord = await launcher.update(versionRecord.id, formData);
 
 // upload!
 
-console.log(versionEntry);
+console.log(versionRecord);
