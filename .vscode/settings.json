@@ -1,6 +1,7 @@
 {
 	"deno.enable": true,
-	"deno.enablePaths": ["scripts", "functions"],
+	"deno.enablePaths": ["scripts", "server"],
 	"deno.lint": false,
-	"deno.unstable": false
+	"deno.unstable": false,
+	"deno.config": "server/deno.json"
 }
