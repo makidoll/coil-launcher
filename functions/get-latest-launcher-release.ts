@@ -30,15 +30,16 @@ async function handleLauncherUpdate(ctx: Context, url: URL) {
 		return;
 	}
 
-	const latestFound = await launcher.getList(1, 1, { sort: "-created" });
+	const latest = await launcher.getFirstListItem(
+		`${osPrefixMap[reqOs]}Update != ""`,
+		{ sort: "-created" },
+	);
 
-	if (latestFound.totalItems == 0) {
+	if (latest == null) {
 		ctx.response.status = 404;
 		json(ctx, { error: "No releases found" });
 		return;
 	}
-
-	const latest = latestFound.items[0];
 
 	const updateUrl =
 		pbUrl +
@@ -58,16 +59,17 @@ async function handleLauncherUpdate(ctx: Context, url: URL) {
 	});
 }
 
-async function handleLauncherDownload(ctx: Context, os: string) {
-	const latestFound = await launcher.getList(1, 1, { sort: "-created" });
+async function handleLauncherDownload(ctx: Context, reqOs: string) {
+	const latest = await launcher.getFirstListItem(
+		`${osPrefixMap[reqOs]}Setup != ""`,
+		{ sort: "-created" },
+	);
 
-	if (latestFound.totalItems == 0) {
+	if (latest == null) {
 		ctx.response.status = 404;
 		json(ctx, { error: "No releases found" });
 		return;
 	}
-
-	const latest = latestFound.items[0];
 
 	const setupUrl =
 		pbUrl +
@@ -76,7 +78,7 @@ async function handleLauncherDownload(ctx: Context, os: string) {
 		"/" +
 		latest.id +
 		"/" +
-		latest[osPrefixMap[os] + "Setup"];
+		latest[osPrefixMap[reqOs] + "Setup"];
 
 	// json(ctx, { url: setupUrl });
 
