@@ -15,8 +15,8 @@ use tauri::{AppHandle, Manager};
 // https://tauri.app/v1/guides/features/command/
 
 fn get_install_path_as_pathbuf(app_handle: &AppHandle, slug: &String) -> Result<PathBuf, String> {
-    let app_data_dir = app_handle.path_resolver().app_data_dir().unwrap();
-    let install_path = app_data_dir.as_path().join(slug.as_str());
+    let app_local_data_dir = app_handle.path_resolver().app_local_data_dir().unwrap();
+    let install_path = app_local_data_dir.as_path().join(slug.as_str());
     return Ok(install_path);
 }
 
@@ -151,6 +151,7 @@ async fn launch_game(app_handle: AppHandle, slug: String) -> Result<(), String> 
 
         let file_name = file.file_name().into_string().unwrap();
 
+        // unless we end up having a game called crash something lol
         if file_name.to_lowercase().contains("crash") {
             continue;
         }
