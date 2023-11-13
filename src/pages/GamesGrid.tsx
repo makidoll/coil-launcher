@@ -1,14 +1,15 @@
 import { Box, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
-import { Game, useApplicationStore } from "../ApplicationStore";
+import { Game, GameInstallState, useGameStore } from "../states/GameStore";
 import GameTitle from "../components/GameTitle";
 
 export function GameButton(props: { game: Game; onClick: () => any }) {
-	const disabled = !props.game.available;
+	// const disabled = !props.game.available;
+	const disabled = false;
 
 	return (
 		<GridItem
 			h="114px"
-			backgroundImage={props.game.bgUrl}
+			backgroundImage={props.game.backgroundUrl}
 			backgroundColor={disabled ? "brandBehind.700" : "brandBehind.600"}
 			backgroundSize={"cover"}
 			backgroundPosition={"center"}
@@ -46,7 +47,11 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 						mb={-0.5}
 						ml={2}
 					>
-						{disabled ? "Coming soon" : "Play now"}
+						{props.game.installState == GameInstallState.Install
+							? "Install now"
+							: props.game.installState == GameInstallState.Update
+							? "Update now"
+							: "Play now"}
 					</Text>
 				</Flex>
 			</Flex>
@@ -55,11 +60,11 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 }
 
 export default function GamesGrid(props: { onGame: (game: Game) => any }) {
-	const app = useApplicationStore();
+	const games = useGameStore(state => state.games);
 
 	return (
 		<Grid w="100%" templateColumns="repeat(4, 1fr)" gap={2} p={2} mt={-2}>
-			{app.games.map((game, i) => (
+			{games.map((game, i) => (
 				<GameButton
 					key={i}
 					game={game}

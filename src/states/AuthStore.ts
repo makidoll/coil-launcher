@@ -2,14 +2,13 @@ import Avatar from "boring-avatars";
 import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
 import { renderToString } from "react-dom/server";
 import { create } from "zustand";
-
-const pb = new PocketBase("https://coil.mechanyx.co");
+import { useGameStore } from "./GameStore";
 
 interface AuthState {
+	pb: PocketBase;
 	loggedIn: boolean;
 	username: string;
 	avatarUrl: string;
-	token: string;
 	login: (
 		usernameOrEmail: string,
 		password: string,
@@ -19,27 +18,25 @@ interface AuthState {
 	autoLogin: () => Promise<{ error: string }>;
 }
 
-const AUTH_TOKEN_KEY = "authToken";
-
 export const useAuthStore = create<AuthState>()((set, get) => ({
+	pb: new PocketBase("https://coil.mechanyx.co"),
 	loggedIn: false,
 	username: "",
 	avatarUrl: "",
-	token: "",
-	login: async (usernameOrEmail, password, token) => {
+	login: async (usernameOrEmail, password) => {
+		const pb = get().pb;
+
+		// pocket base comes with an auth store that saves to pocketbase_auth
+
+		// TODO: check what happens if you disable users permission in pocketbase
+
 		try {
-			let authData: RecordAuthResponse<RecordModel>;
-
-			// check what happens if you disable users permission in pocketbase
-
-			if (token == null) {
-				authData = await pb
-					.collection("users")
-					.authWithPassword(usernameOrEmail, password);
-			} else {
-				pb.authStore.save(token);
-				authData = await pb.collection("users").authRefresh();
-			}
+			let authData: RecordAuthResponse<RecordModel> =
+				usernameOrEmail == null
+					? await pb.collection("users").authRefresh()
+					: await pb
+							.collection("users")
+							.authWithPassword(usernameOrEmail, password);
 
 			set({
 				loggedIn: true,
@@ -56,10 +53,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 							}),
 						),
 					),
-				token: authData.token,
 			});
 
-			localStorage.setItem(AUTH_TOKEN_KEY, authData.token);
+			// other things to do after logging in
+			(async () => {
+				await useGameStore.getState().refreshGames();
+			})();
 
 			return { error: "" };
 		} catch (error) {
@@ -67,18 +66,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 		}
 	},
 	logout: async () => {
-		set({ loggedIn: false, username: "", token: "" });
-
-		localStorage.setItem(AUTH_TOKEN_KEY, "");
+		get().pb.authStore.clear();
+		set({ loggedIn: false, username: "" });
 	},
 	autoLogin: async () => {
-		const authToken = localStorage.getItem(AUTH_TOKEN_KEY);
-		if (!authToken) return { error: "" };
+		if (localStorage.getItem("pocketbase_auth") == null)
+			return { error: "" };
 
-		const res = await get().login(null, null, authToken);
-
+		const res = await get().login(null, null);
 		if (res.error) await get().logout();
 
-		return res;
+		return { error: "" };
 	},
 }));

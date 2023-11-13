@@ -5,6 +5,10 @@ export default function StandardButton(
 ) {
 	const colorScheme = props.colorScheme ?? "brand";
 	const baseWeight = props.baseWeight ?? 500;
+
+	const childProps = { ...props };
+	delete childProps.baseWeight;
+
 	return (
 		<Button
 			background={colorScheme + "." + baseWeight}
@@ -14,7 +18,7 @@ export default function StandardButton(
 			textTransform={"uppercase"}
 			fontSize={14}
 			_hover={{ background: colorScheme + "." + (baseWeight - 100) }}
-			{...props}
+			{...childProps}
 		/>
 	);
 }

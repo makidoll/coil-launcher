@@ -1,7 +1,7 @@
 import { Center, Flex, Input, Text, VStack } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../AuthStore";
+import { useAuthStore } from "../states/AuthStore";
 import MechanyxCoilLogo from "../components/MechanyxCoilLogo";
 import StandardButton from "../components/StandardButton";
 

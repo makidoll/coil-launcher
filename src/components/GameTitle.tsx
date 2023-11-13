@@ -1,5 +1,5 @@
 import { Image, Text } from "@chakra-ui/react";
-import { Game } from "../ApplicationStore";
+import { Game } from "../states/GameStore";
 
 export default function GameTitle(props: { game: Game }) {
 	return props.game.logoUrl ? (

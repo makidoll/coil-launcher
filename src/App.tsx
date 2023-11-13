@@ -1,11 +1,11 @@
 import { Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { Game } from "./ApplicationStore";
+import { Game } from "./states/GameStore";
 import TitleBar from "./components/TitleBar";
 import GameInfo from "./pages/GameInfo";
 import GamesGrid from "./pages/GamesGrid";
 import LoginScreen from "./pages/LoginScreen";
-import { useAuthStore } from "./AuthStore";
+import { useAuthStore } from "./states/AuthStore";
 
 function App() {
 	const auth = useAuthStore(({ loggedIn }) => ({ loggedIn }));
@@ -31,7 +31,7 @@ function App() {
 			/>
 			{auth.loggedIn ? (
 				currentGame ? (
-					<GameInfo game={currentGame} />
+					<GameInfo slug={currentGame.slug} />
 				) : (
 					<GamesGrid
 						onGame={game => {

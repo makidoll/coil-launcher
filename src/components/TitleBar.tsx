@@ -20,8 +20,10 @@ import { appWindow } from "@tauri-apps/api/window";
 import { FaArrowLeft, FaArrowsRotate, FaXmark } from "react-icons/fa6";
 import { SiSpringCreators } from "react-icons/si";
 import MechanyxCoilLogo from "./MechanyxCoilLogo";
-import { useAuthStore } from "../AuthStore";
+import { useAuthStore } from "../states/AuthStore";
 import { chakraColor } from "../utils";
+import { useGameStore } from "../states/GameStore";
+import { useState } from "react";
 
 function TitleBarIconButton(props: IconButtonProps) {
 	return (
@@ -52,6 +54,8 @@ export default function TitleBar(props: {
 		avatarUrl,
 		logout,
 	}));
+
+	const [refreshDisabled, setRefreshDisabled] = useState(false);
 
 	return (
 		<HStack
@@ -139,14 +143,23 @@ export default function TitleBar(props: {
 								{/* <MenuDivider /> */}
 							</MenuList>
 						</Menu>
-						{/* <TitleBarButton
+						<TitleBarIconButton
 							aria-label="Reload"
-							icon={<FaArrowsRotate size={18} />}
+							isDisabled={refreshDisabled}
+							icon={
+								<FaArrowsRotate
+									color={chakraColor("brandBehind.50")}
+									size={18}
+								/>
+							}
 							onClick={() => {
-								alert("refresh games");
+								setRefreshDisabled(true);
+								useGameStore.getState().refreshGames();
+								setTimeout(() => {
+									setRefreshDisabled(false);
+								}, 2000);
 							}}
-						/> */}
-						{/* <Box mx={4}></Box> */}
+						/>
 					</>
 				) : (
 					<>

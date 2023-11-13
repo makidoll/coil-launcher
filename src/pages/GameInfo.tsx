@@ -1,44 +1,32 @@
-import {
-	Box,
-	Button,
-	ChakraProvider,
-	Flex,
-	HStack,
-	Progress,
-	StylesProvider,
-	Text,
-	VStack,
-	defineStyleConfig,
-	extendBaseTheme,
-	extendTheme,
-	useMultiStyleConfig,
-	useStyleConfig,
-} from "@chakra-ui/react";
-import { Game } from "../ApplicationStore";
+import { Flex, HStack, Progress, Text, VStack } from "@chakra-ui/react";
+import { FaDownload, FaFolderOpen, FaPlay, FaTrash } from "react-icons/fa6";
 import GameTitle from "../components/GameTitle";
 import StandardButton from "../components/StandardButton";
 import {
-	FaDownload,
-	FaPlay,
-	FaTrash,
-	FaFolderOpen,
-	FaRegFolderOpen,
-} from "react-icons/fa6";
+	Game,
+	GameInstallState,
+	deleteGame,
+	installOrUpdateGame,
+	launchGame,
+	useGameStore,
+} from "../states/GameStore";
 
-export default function GameInfo(props: { game: Game }) {
-	const customTheme = extendBaseTheme({
-		components: {
-			Progress: {
-				baseStyle: {
-					filledTrack: {
-						bg: "red",
-					},
-				},
-			},
-		},
-	});
+export default function GameInfo(props: { slug: string }) {
+	const game = useGameStore(state =>
+		state.games.find(game => game.slug == props.slug),
+	);
 
-	console.log(customTheme);
+	if (game == null) {
+		return <></>;
+	}
+
+	const installState = game.installState;
+
+	const installingProgress = useGameStore(
+		state => state.installing[game.slug],
+	);
+
+	const installing = installingProgress != null;
 
 	return (
 		<Flex flexDir={"column"} h={"100%"}>
@@ -46,31 +34,102 @@ export default function GameInfo(props: { game: Game }) {
 				minH={"96px"}
 				maxH={"96px"}
 				w="100%"
-				backgroundImage={props.game.bgUrl}
+				backgroundImage={game.backgroundUrl}
 				backgroundPosition={"center"}
 				backgroundSize={"cover"}
 				flexDir={"row"}
 				alignItems={"end"}
 				p={4}
 			>
-				<GameTitle game={props.game} />
+				<GameTitle game={game} />
 			</Flex>
-			<Progress hasStripe value={64} isAnimated size={"sm"} />
+			{installing ? (
+				<Progress
+					hasStripe
+					value={installingProgress}
+					isAnimated
+					size={"sm"}
+				/>
+			) : null}
 			<Flex p={4} flexDir={"column"} alignItems={"start"} h={"100%"}>
 				<HStack w="100%" mb={3} spacing={4}>
-					<StandardButton leftIcon={<FaPlay />}>Play</StandardButton>
-					<StandardButton leftIcon={<FaDownload />}>
-						Install
-					</StandardButton>
-					<StandardButton colorScheme="red">
-						<FaTrash />
-					</StandardButton>
-					<StandardButton colorScheme="brandBehind" baseWeight={700}>
-						<FaFolderOpen />
-					</StandardButton>
-					<Text fontWeight={"800"}>400 MB</Text>
+					{installState == GameInstallState.Install ? (
+						<StandardButton
+							leftIcon={<FaDownload />}
+							isLoading={installing}
+							onClick={() => installOrUpdateGame(game)}
+						>
+							Install
+						</StandardButton>
+					) : (
+						<>
+							{installState == GameInstallState.Update ? (
+								<StandardButton
+									leftIcon={<FaDownload />}
+									isLoading={installing}
+									onClick={() => installOrUpdateGame(game)}
+								>
+									Update
+								</StandardButton>
+							) : (
+								<StandardButton
+									leftIcon={<FaPlay />}
+									isLoading={installing}
+									onClick={() => launchGame(game)}
+								>
+									Play
+								</StandardButton>
+							)}
+							<StandardButton
+								colorScheme="red"
+								isLoading={installing}
+								onClick={() => deleteGame(game)}
+							>
+								<FaTrash />
+							</StandardButton>
+							<StandardButton
+								colorScheme="brandBehind"
+								baseWeight={700}
+								isLoading={installing}
+								isDisabled={true}
+							>
+								<FaFolderOpen />
+							</StandardButton>
+						</>
+					)}
+					{installState != GameInstallState.Install ? (
+						<VStack spacing={1} ml={1}>
+							<Text fontWeight={"400"}>Installed</Text>
+							<Text
+								fontWeight={"900"}
+								fontSize={"12px"}
+								lineHeight={"12px"}
+							>
+								{game.installed.version}
+							</Text>
+						</VStack>
+					) : (
+						<></>
+					)}
+					{installState == GameInstallState.Update ? (
+						<VStack spacing={1}>
+							<Text fontWeight={"400"}>Available</Text>
+							<Text
+								fontWeight={"900"}
+								fontSize={"12px"}
+								lineHeight={"12px"}
+								textTransform={"uppercase"}
+							>
+								{game.latest == null
+									? "None"
+									: game.latest.version}
+							</Text>
+						</VStack>
+					) : (
+						<></>
+					)}
 				</HStack>
-				<Text>Made by Melody and Maki</Text>
+				<Text>{game.description}</Text>
 			</Flex>
 		</Flex>
 	);
