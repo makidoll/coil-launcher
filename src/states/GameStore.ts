@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke, shell } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import { platform } from "@tauri-apps/api/os";
 import { create } from "zustand";
@@ -186,4 +186,8 @@ export async function launchGame(game: Game) {
 	await invoke("launch_game", {
 		slug: game.slug,
 	});
+}
+
+export async function openGameFolder(game: Game) {
+	shell.open("file://" + game.installed.path);
 }

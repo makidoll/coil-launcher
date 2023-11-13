@@ -15,7 +15,7 @@ tauri-build = { version = "1.5", features = [] }
 [dependencies]
 # tauri = { version = "1.5", features = [ "updater", "window-close", "window-show", "window-maximize", "window-unmaximize", "window-start-dragging", "window-hide", "window-unminimize", "window-minimize"] }
 # https://github.com/tauri-apps/tauri/pull/7956
-tauri = { git = "https://github.com/makidrone/tauri.git", branch = "tauri-v1.5.1-updater-fix", features = [ "os-all", "updater", "window-close", "window-show", "window-maximize", "window-unmaximize", "window-start-dragging", "window-hide", "window-unminimize", "window-minimize"] }
+tauri = { git = "https://github.com/makidrone/tauri.git", branch = "tauri-v1.5.1-updater-fix", features = [ "shell-open", "os-all", "updater", "window-close", "window-show", "window-maximize", "window-unmaximize", "window-start-dragging", "window-hide", "window-unminimize", "window-minimize"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 reqwest = { version = "0.11.22", features = ["stream"] }

@@ -1,11 +1,11 @@
 import { Flex } from "@chakra-ui/react";
 import { useState } from "react";
-import { Game } from "./states/GameStore";
 import TitleBar from "./components/TitleBar";
 import GameInfo from "./pages/GameInfo";
 import GamesGrid from "./pages/GamesGrid";
-import LoginScreen from "./pages/LoginScreen";
+import SignInScreen from "./pages/SignInScreen";
 import { useAuthStore } from "./states/AuthStore";
+import { Game } from "./states/GameStore";
 
 function App() {
 	const auth = useAuthStore(({ loggedIn }) => ({ loggedIn }));
@@ -40,7 +40,7 @@ function App() {
 					/>
 				)
 			) : (
-				<LoginScreen />
+				<SignInScreen />
 			)}
 		</Flex>
 	);

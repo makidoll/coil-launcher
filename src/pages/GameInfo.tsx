@@ -8,6 +8,7 @@ import {
 	deleteGame,
 	installOrUpdateGame,
 	launchGame,
+	openGameFolder,
 	useGameStore,
 } from "../states/GameStore";
 
@@ -34,6 +35,7 @@ export default function GameInfo(props: { slug: string }) {
 				minH={"96px"}
 				maxH={"96px"}
 				w="100%"
+				backgroundColor={"brandBehind.600"}
 				backgroundImage={game.backgroundUrl}
 				backgroundPosition={"center"}
 				backgroundSize={"cover"}
@@ -91,7 +93,7 @@ export default function GameInfo(props: { slug: string }) {
 								colorScheme="brandBehind"
 								baseWeight={700}
 								isLoading={installing}
-								isDisabled={true}
+								onClick={() => openGameFolder(game)}
 							>
 								<FaFolderOpen />
 							</StandardButton>

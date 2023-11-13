@@ -1,8 +1,15 @@
+import { shell } from "@tauri-apps/api";
 import Avatar from "boring-avatars";
 import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
 import { renderToString } from "react-dom/server";
 import { create } from "zustand";
 import { useGameStore } from "./GameStore";
+
+export enum LoginMethod {
+	AutoLogin = "autoLogin",
+	Password = "password",
+	Discord = "discord",
+}
 
 interface AuthState {
 	pb: PocketBase;
@@ -10,9 +17,9 @@ interface AuthState {
 	username: string;
 	avatarUrl: string;
 	login: (
-		usernameOrEmail: string,
-		password: string,
-		token?: string,
+		loginMethod: LoginMethod,
+		usernameOrEmail?: string,
+		password?: string,
 	) => Promise<{ error: string }>;
 	logout: () => Promise<void>;
 	autoLogin: () => Promise<{ error: string }>;
@@ -23,7 +30,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 	loggedIn: false,
 	username: "",
 	avatarUrl: "",
-	login: async (usernameOrEmail, password) => {
+	login: async (
+		loginMethod: LoginMethod,
+		usernameOrEmail?: string,
+		password?: string,
+	): Promise<{ error: string }> => {
 		const pb = get().pb;
 
 		// pocket base comes with an auth store that saves to pocketbase_auth
@@ -31,12 +42,28 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 		// TODO: check what happens if you disable users permission in pocketbase
 
 		try {
-			let authData: RecordAuthResponse<RecordModel> =
-				usernameOrEmail == null
-					? await pb.collection("users").authRefresh()
-					: await pb
-							.collection("users")
-							.authWithPassword(usernameOrEmail, password);
+			let authData: RecordAuthResponse<RecordModel>;
+
+			switch (loginMethod) {
+				case LoginMethod.AutoLogin:
+					authData = await pb.collection("users").authRefresh();
+					break;
+
+				case LoginMethod.Password:
+					authData = await pb
+						.collection("users")
+						.authWithPassword(usernameOrEmail, password);
+					break;
+
+				case LoginMethod.Discord:
+					authData = await pb.collection("users").authWithOAuth2({
+						provider: "discord",
+						urlCallback: url => {
+							shell.open(url);
+						},
+					});
+					break;
+			}
 
 			set({
 				loggedIn: true,
@@ -62,6 +89,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
 			return { error: "" };
 		} catch (error) {
+			console.log(error);
 			return { error: error.data.message };
 		}
 	},
@@ -73,7 +101,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 		if (localStorage.getItem("pocketbase_auth") == null)
 			return { error: "" };
 
-		const res = await get().login(null, null);
+		const res = await get().login(LoginMethod.AutoLogin);
 		if (res.error) await get().logout();
 
 		return { error: "" };
