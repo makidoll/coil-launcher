@@ -151,6 +151,10 @@ async fn launch_game(app_handle: AppHandle, slug: String) -> Result<(), String> 
 
         let file_name = file.file_name().into_string().unwrap();
 
+        if file_name.to_lowercase().contains("crash") {
+            continue;
+        }
+
         #[cfg(target_os = "windows")]
         {
             if file_name.ends_with(".exe") {
