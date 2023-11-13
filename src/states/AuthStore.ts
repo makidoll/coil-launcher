@@ -26,7 +26,7 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
-	pb: new PocketBase("https://coil.mechanyx.co"),
+	pb: new PocketBase("https://coil.mechanyx.co/pb"),
 	loggedIn: false,
 	username: "",
 	avatarUrl: "",

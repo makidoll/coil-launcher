@@ -7,7 +7,7 @@ import { indexRoutes } from "./index-routes.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
-const pb = new PocketBase("https://coil.mechanyx.co");
+const pb = new PocketBase("https://coil.mechanyx.co/pb");
 const app = new Hono();
 
 app.route("/", launcherRoutes(pb));

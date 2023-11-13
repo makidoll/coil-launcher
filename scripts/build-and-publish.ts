@@ -80,7 +80,7 @@ const version = JSON.parse(
 
 // init pocketbase
 
-const pb = new PocketBase("https://coil.mechanyx.co");
+const pb = new PocketBase("https://coil.mechanyx.co/pb");
 
 await pb.admins.authWithPassword(
 	"build@mechanyx.localhost",
