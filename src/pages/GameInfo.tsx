@@ -1,4 +1,4 @@
-import { Flex, HStack, Progress, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Progress, Text, VStack } from "@chakra-ui/react";
 import { FaDownload, FaFolderOpen, FaPlay, FaTrash } from "react-icons/fa6";
 import GameTitle from "../components/GameTitle";
 import StandardButton from "../components/StandardButton";
@@ -12,16 +12,33 @@ import {
 	useGameStore,
 } from "../states/GameStore";
 
+function Version(props: { key: string; title: string; version: string }) {
+	return (
+		<VStack spacing={1} ml={1} key={props.key}>
+			<Text fontWeight={"400"} fontSize={"14px"} mt={-1.5}>
+				{props.title}
+			</Text>
+			<Text
+				fontWeight={"900"}
+				fontSize={"12px"}
+				lineHeight={"12px"}
+				textTransform={"uppercase"}
+			>
+				{props.version}
+			</Text>
+		</VStack>
+	);
+}
+
 export default function GameInfo(props: { slug: string }) {
 	const game = useGameStore(state =>
 		state.games.find(game => game.slug == props.slug),
 	);
 
 	if (game == null) {
+		// TODO: error maybe?
 		return <></>;
 	}
-
-	const installState = game.installState;
 
 	const installingProgress = useGameStore(
 		state => state.installing[game.slug],
@@ -29,11 +46,100 @@ export default function GameInfo(props: { slug: string }) {
 
 	const installing = installingProgress != null;
 
+	const playBarLeft: JSX.Element[] = [];
+	const playBarRight: JSX.Element[] = [];
+
+	switch (game.installState) {
+		case GameInstallState.Install:
+			playBarLeft.push(
+				<StandardButton
+					key={"install-button"}
+					leftIcon={<FaDownload />}
+					isLoading={installing}
+					onClick={() => installOrUpdateGame(game)}
+				>
+					Install
+				</StandardButton>,
+			);
+			break;
+
+		case GameInstallState.Update:
+			playBarLeft.push(
+				<StandardButton
+					key={"update-button"}
+					leftIcon={<FaDownload />}
+					isLoading={installing}
+					onClick={() => installOrUpdateGame(game)}
+				>
+					Update
+				</StandardButton>,
+			);
+			break;
+
+		case GameInstallState.Play:
+			playBarLeft.push(
+				<StandardButton
+					key={"play-button"}
+					leftIcon={<FaPlay />}
+					isLoading={installing}
+					onClick={() => launchGame(game)}
+				>
+					Play
+				</StandardButton>,
+			);
+			playBarRight.push(
+				<StandardButton
+					key="open-game-folder"
+					colorScheme="brandBehind"
+					baseWeight={700}
+					isLoading={installing}
+					onClick={() => openGameFolder(game)}
+				>
+					<FaFolderOpen />
+				</StandardButton>,
+				<StandardButton
+					key={"delete-game"}
+					colorScheme="red"
+					isLoading={installing}
+					onClick={() => deleteGame(game)}
+				>
+					<FaTrash />
+				</StandardButton>,
+			);
+			break;
+	}
+
+	if (
+		game.installState == GameInstallState.Update ||
+		game.installState == GameInstallState.Play
+	) {
+		playBarLeft.push(
+			<Version
+				key="installed-version"
+				title="Installed"
+				version={game.installed.version}
+			/>,
+		);
+	}
+
+	if (
+		game.installState == GameInstallState.Install ||
+		game.installState == GameInstallState.Update
+	) {
+		playBarLeft.push(
+			<Version
+				key="latest-version"
+				title="Latest"
+				version={game.latest == null ? "None" : game.latest.version}
+			/>,
+		);
+	}
+
 	return (
 		<Flex flexDir={"column"} h={"100%"}>
 			<Flex
-				minH={"96px"}
-				maxH={"96px"}
+				minH={"128px"}
+				maxH={"128px"}
 				w="100%"
 				backgroundColor={"brandBehind.600"}
 				backgroundImage={game.backgroundUrl}
@@ -53,86 +159,14 @@ export default function GameInfo(props: { slug: string }) {
 					size={"sm"}
 				/>
 			) : null}
-			<Flex p={4} flexDir={"column"} alignItems={"start"} h={"100%"}>
-				<HStack w="100%" mb={3} spacing={4}>
-					{installState == GameInstallState.Install ? (
-						<StandardButton
-							leftIcon={<FaDownload />}
-							isLoading={installing}
-							onClick={() => installOrUpdateGame(game)}
-						>
-							Install
-						</StandardButton>
-					) : (
-						<>
-							{installState == GameInstallState.Update ? (
-								<StandardButton
-									leftIcon={<FaDownload />}
-									isLoading={installing}
-									onClick={() => installOrUpdateGame(game)}
-								>
-									Update
-								</StandardButton>
-							) : (
-								<StandardButton
-									leftIcon={<FaPlay />}
-									isLoading={installing}
-									onClick={() => launchGame(game)}
-								>
-									Play
-								</StandardButton>
-							)}
-							<StandardButton
-								colorScheme="red"
-								isLoading={installing}
-								onClick={() => deleteGame(game)}
-							>
-								<FaTrash />
-							</StandardButton>
-							<StandardButton
-								colorScheme="brandBehind"
-								baseWeight={700}
-								isLoading={installing}
-								onClick={() => openGameFolder(game)}
-							>
-								<FaFolderOpen />
-							</StandardButton>
-						</>
-					)}
-					{installState != GameInstallState.Install ? (
-						<VStack spacing={1} ml={1}>
-							<Text fontWeight={"400"}>Installed</Text>
-							<Text
-								fontWeight={"900"}
-								fontSize={"12px"}
-								lineHeight={"12px"}
-							>
-								{game.installed.version}
-							</Text>
-						</VStack>
-					) : (
-						<></>
-					)}
-					{installState == GameInstallState.Update ? (
-						<VStack spacing={1}>
-							<Text fontWeight={"400"}>Available</Text>
-							<Text
-								fontWeight={"900"}
-								fontSize={"12px"}
-								lineHeight={"12px"}
-								textTransform={"uppercase"}
-							>
-								{game.latest == null
-									? "None"
-									: game.latest.version}
-							</Text>
-						</VStack>
-					) : (
-						<></>
-					)}
-				</HStack>
+			<HStack w="100%" spacing={4} background={"brandBehind.850"} p={4}>
+				{playBarLeft}
+				<Box flexGrow={1}></Box>
+				{playBarRight}
+			</HStack>
+			<Box p={4} flexGrow={1}>
 				<Text>{game.description}</Text>
-			</Flex>
+			</Box>
 		</Flex>
 	);
 }

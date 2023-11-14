@@ -33,6 +33,7 @@ export interface Game {
 	logoUrl: string;
 	backgroundUrl: string;
 	description: string;
+	available: boolean;
 	installState: GameInstallState;
 	installed: {
 		path: string;
@@ -101,6 +102,7 @@ export const useGameStore = create<GameStore>()(set => ({
 				backgroundUrl: pb.files.getUrl(record, record.background),
 				logoUrl: pb.files.getUrl(record, record.logo),
 				description: record.description,
+				available: record.available,
 				installState,
 				installed: {
 					path: await invoke("get_install_path", {

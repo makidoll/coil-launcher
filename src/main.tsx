@@ -35,6 +35,7 @@ const brandBehind = {
 	600: hsvMix(brandBehindLight, brandBehindBase, 0.7),
 	700: hsvMix(brandBehindLight, brandBehindBase, 0.8),
 	800: hsvMix(brandBehindLight, brandBehindBase, 0.9),
+	850: hsvMix(brandBehindLight, brandBehindBase, 0.95),
 	900: brandBehindBase,
 };
 
