@@ -8,7 +8,7 @@
 	},
 	"package": {
 		"productName": "Mechanyx Coil",
-		"version": "23.11.13-1329"
+		"version": "23.11.15-1430"
 	},
 	"tauri": {
 		"allowlist": {
