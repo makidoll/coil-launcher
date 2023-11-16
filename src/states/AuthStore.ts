@@ -1,3 +1,4 @@
+import { Sha256 } from "@aws-crypto/sha256-browser";
 import { shell } from "@tauri-apps/api";
 import Avatar from "boring-avatars";
 import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
@@ -23,6 +24,63 @@ interface AuthState {
 	) => Promise<{ error: string }>;
 	logout: () => Promise<void>;
 	autoLogin: () => Promise<{ error: string }>;
+}
+
+async function boringProfilePicture(name: string, size: number) {
+	return (
+		"data:image/svg+xml;base64," +
+		btoa(
+			renderToString(
+				Avatar({
+					size,
+					name,
+					square: true,
+					variant: "beam",
+				}),
+			),
+		)
+	);
+}
+
+function loadImage(url: string) {
+	return new Promise<HTMLImageElement>((resolve, reject) => {
+		var img = new Image();
+		img.onload = () => {
+			resolve(img);
+		};
+		img.onerror = (error: Event) => {
+			reject(error.target);
+		};
+		img.src = url;
+	});
+}
+
+async function getProfilePicture(authRecord: any) {
+	const size = 128;
+
+	if (authRecord.email == "" || authRecord.email == null) {
+		return await boringProfilePicture(authRecord.id, size);
+	}
+
+	const hash = new Sha256();
+	hash.update(authRecord.email);
+	const digest = await hash.digest();
+	let emailHash = Array.from(digest)
+		.map(b => b.toString(16).padStart(2, "0"))
+		.join("");
+
+	// fail on purpose
+	// emailHash = "abcdef" + emailHash.slice(6);
+
+	try {
+		const image = await loadImage(
+			`https://www.gravatar.com/avatar/${emailHash}?size=${size}&default=404please`,
+		);
+
+		return image.src;
+	} catch (error) {
+		return await boringProfilePicture(authRecord.id, size);
+	}
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -68,18 +126,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 			set({
 				loggedIn: true,
 				username: authData.record.username,
-				avatarUrl:
-					"data:image/svg+xml;base64," +
-					btoa(
-						renderToString(
-							Avatar({
-								size: 128,
-								name: authData.record.id,
-								square: true,
-								variant: "beam",
-							}),
-						),
-					),
+				avatarUrl: await getProfilePicture(authData.record),
 			});
 
 			// other things to do after logging in
