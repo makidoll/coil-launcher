@@ -1,6 +1,6 @@
 [package]
 name = "mechanyx-coil"
-version = "23.11.15-1430"
+version = "23.11.18-1275"
 description = "A Tauri App"
 authors = ["you"]
 license = ""
