@@ -87,7 +87,7 @@ await pb.admins.authWithPassword(
 	"fcDVeV0CxONEYU7gJNSvOElPYlMQ9jH7",
 );
 
-const launcher = pb.collection("launcher");
+const launcher = pb.collection("launcher_builds");
 
 async function getDbEntry(version: string): Promise<RecordModel> {
 	try {

@@ -2,15 +2,21 @@ import { Context, Hono } from "hono";
 import { getMimeType } from "hono/mime";
 import * as path from "path";
 import PocketBase from "pocketbase";
-import { launcherRoutes } from "./launcher-routes.ts";
+import { apiLauncherRoutes } from "./api-launcher-routes.ts";
 import { indexRoutes } from "./index-routes.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
 const pb = new PocketBase("https://coil.mechanyx.co/pb");
+await pb.admins.authWithPassword(
+	"build@mechanyx.localhost",
+	"fcDVeV0CxONEYU7gJNSvOElPYlMQ9jH7",
+);
+
 const app = new Hono();
 
-app.route("/", launcherRoutes(pb));
+app.route("/", apiLauncherRoutes(pb));
+
 app.route("/", indexRoutes());
 
 app.get("*", async (c: Context) => {

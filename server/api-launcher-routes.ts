@@ -1,8 +1,8 @@
 import { Context, Hono } from "hono";
 import PocketBase from "pocketbase";
 
-export function launcherRoutes(pb: PocketBase) {
-	const launcher = pb.collection("launcher");
+export function apiLauncherRoutes(pb: PocketBase) {
+	const launcher = pb.collection("launcher_builds");
 
 	const osPrefixMap: { [os: string]: string } = {
 		windows: "nsis",
