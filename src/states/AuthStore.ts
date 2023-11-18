@@ -154,3 +154,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 		return { error: "" };
 	},
 }));
+
+export function resetPassword(email: string) {
+	const pb = useAuthStore.getState().pb;
+	return pb.collection("users").requestPasswordReset(email);
+}

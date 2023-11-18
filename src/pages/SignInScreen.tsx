@@ -1,11 +1,19 @@
-import { Center, Flex, Input, Text, VStack, chakra } from "@chakra-ui/react";
+import {
+	Center,
+	Flex,
+	Input,
+	Text,
+	VStack,
+	chakra,
+	useToast,
+} from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useCallback, useEffect, useState } from "react";
-import { LoginMethod, useAuthStore } from "../states/AuthStore";
+import { FaAt, FaDiscord } from "react-icons/fa6";
+import { hexColorMix } from "../color-utils";
 import MechanyxCoilLogo from "../components/MechanyxCoilLogo";
 import StandardButton from "../components/StandardButton";
-import { hexColorMix } from "../color-utils";
-import { FaAt, FaDiscord } from "react-icons/fa6";
+import { LoginMethod, resetPassword, useAuthStore } from "../states/AuthStore";
 
 const validate = (values: any) => {
 	const errors: any = {};
@@ -32,6 +40,13 @@ export default function SignInScreen() {
 	const [error, setError] = useState("");
 
 	const [onPasswordScreen, setOnPasswordScreen] = useState(false);
+
+	const toast = useToast({
+		position: "top-left",
+		containerStyle: {
+			marginBottom: 0,
+		},
+	});
 
 	useEffect(() => {
 		(async () => {
@@ -67,10 +82,38 @@ export default function SignInScreen() {
 		// setLoading(false);
 	}, [auth]);
 
+	const passwordReset = useCallback(async () => {
+		const usernameOrEmail = formik.values.usernameOrEmail;
+		console.log(usernameOrEmail);
+
+		if (usernameOrEmail == null || usernameOrEmail == "") {
+			return toast({
+				status: "info",
+				title: "Please enter your email",
+			});
+		}
+
+		try {
+			await resetPassword(usernameOrEmail);
+			return toast({
+				status: "success",
+				title: "Password reset sent!",
+				description: "Unless email wasn't found",
+			});
+		} catch (error) {
+			console.log();
+			return toast({
+				status: "error",
+				title: "Failed to send password reset",
+				description: "Make sure you entered your email",
+			});
+		}
+	}, [formik.values]);
+
 	return (
 		<Flex w={"100%"} h={"100%"} flexDir={"column"}>
 			<Center flexGrow={1}>
-				<VStack w={"300px"} spacing={2} mt={-8}>
+				<VStack w={"300px"} spacing={2} mt={0}>
 					<MechanyxCoilLogo fill="#fff" w="100%" mb={2} />
 					{onPasswordScreen ? (
 						<chakra.form onSubmit={formik.handleSubmit} w="100%">
@@ -106,8 +149,21 @@ export default function SignInScreen() {
 									type="button"
 									isDisabled={loading}
 									linkButton
-									opacity={0.5}
-									mt={2}
+									opacity={0.35}
+									mt={4}
+									onClick={() => {
+										passwordReset();
+									}}
+								>
+									Reset password
+								</StandardButton>
+								<StandardButton
+									w="100%"
+									type="button"
+									isDisabled={loading}
+									linkButton
+									opacity={0.35}
+									mt={4}
 									onClick={() => {
 										setOnPasswordScreen(false);
 									}}
