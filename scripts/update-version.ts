@@ -5,7 +5,7 @@ const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
 const date = new Date();
 
 const version =
-	String(date.getUTCFullYear()).slice(-2) +
+	String(date.getUTCFullYear()) +
 	"." +
 	(date.getUTCMonth() + 1) +
 	"." +
