@@ -3,7 +3,11 @@ import { FaDownload, FaPlay, FaSquareXmark, FaX } from "react-icons/fa6";
 import { Game, GameInstallState, useGameStore } from "../states/GameStore";
 import { ReactElement, useEffect, useState } from "react";
 
-function GameItem(props: { game: Game; onClick: () => any }) {
+function GameItem(props: {
+	game: Game;
+	onClick: () => any;
+	selected: boolean;
+}) {
 	const game = props.game;
 
 	let icon: ReactElement;
@@ -36,9 +40,10 @@ function GameItem(props: { game: Game; onClick: () => any }) {
 			spacing={0}
 			onClick={props.onClick}
 			cursor={"pointer"}
-			_hover={{ background: "brandBehind.700" }}
 			transitionProperty="var(--chakra-transition-property-common)"
 			transitionDuration="var(--chakra-transition-duration-normal)"
+			background={props.selected ? "brandBehind.700" : null}
+			_hover={{ background: "brandBehind.700" }}
 		>
 			<HStack
 				spacing={2}
@@ -78,6 +83,7 @@ function GameItem(props: { game: Game; onClick: () => any }) {
 export default function GamesSidebar(props: {
 	onGame: (game: Game) => any;
 	onFirstGameLoaded: (game: Game) => any;
+	selectedGame: Game;
 }) {
 	const games = useGameStore(state => state.games);
 
@@ -107,6 +113,7 @@ export default function GamesSidebar(props: {
 					onClick={() => {
 						props.onGame(game);
 					}}
+					selected={props.selectedGame == game}
 				/>
 			))}
 		</Flex>

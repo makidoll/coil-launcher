@@ -42,6 +42,7 @@ function App() {
 							if (currentGame != null) return;
 							setCurrentGame(game);
 						}}
+						selectedGame={currentGame}
 					/>
 					{currentGame ? (
 						<GameInfo slug={currentGame.slug} />
