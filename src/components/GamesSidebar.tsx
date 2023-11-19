@@ -33,7 +33,6 @@ function GameItem(props: {
 			w="100%"
 			minH={"32px"}
 			maxH={"32px"}
-			borderBottom={"solid 1px var(--chakra-colors-brandBehind-700)"}
 			alignItems={"center"}
 			justifyContent={"start"}
 			pl="6px"
@@ -43,7 +42,15 @@ function GameItem(props: {
 			transitionProperty="var(--chakra-transition-property-common)"
 			transitionDuration="var(--chakra-transition-duration-normal)"
 			background={props.selected ? "brandBehind.700" : null}
-			_hover={{ background: "brandBehind.700" }}
+			borderBottom={
+				props.selected
+					? "solid 1px var(--chakra-colors-brandBehind-600)"
+					: "solid 1px var(--chakra-colors-brandBehind-700)"
+			}
+			_hover={{
+				background: "brandBehind.700",
+				borderBottom: "solid 1px var(--chakra-colors-brandBehind-600)",
+			}}
 		>
 			<HStack
 				spacing={2}
