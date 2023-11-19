@@ -45,6 +45,7 @@ function TitleBarIconButton(props: IconButtonProps) {
 }
 
 export default function TitleBar(props: {
+	loginScreen: boolean;
 	showGoBack: boolean;
 	onGoBack: () => any;
 }) {
@@ -67,6 +68,7 @@ export default function TitleBar(props: {
 			userSelect={"none"}
 			pointerEvents={"all"}
 			// bg={"red"}
+			background={props.loginScreen ? "transparent" : "brandBehind.850"}
 		>
 			<HStack
 				w="100%"

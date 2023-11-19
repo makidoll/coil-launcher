@@ -1,11 +1,12 @@
 import { Flex } from "@chakra-ui/react";
 import { useState } from "react";
+import GamesSidebar from "./components/GamesSidebar";
 import TitleBar from "./components/TitleBar";
+import { useAuthStore } from "./states/AuthStore";
+import { Game } from "./states/GameStore";
 import GameInfo from "./pages/GameInfo";
 import GamesGrid from "./pages/GamesGrid";
 import SignInScreen from "./pages/SignInScreen";
-import { useAuthStore } from "./states/AuthStore";
-import { Game } from "./states/GameStore";
 
 function App() {
 	const auth = useAuthStore(({ loggedIn }) => ({ loggedIn }));
@@ -27,18 +28,32 @@ function App() {
 				onGoBack={() => {
 					setCurrentGame(null);
 				}}
-				showGoBack={currentGame != null}
+				// showGoBack={currentGame != null}
+				showGoBack={false}
+				loginScreen={!auth.loggedIn}
 			/>
 			{auth.loggedIn ? (
-				currentGame ? (
-					<GameInfo slug={currentGame.slug} />
-				) : (
-					<GamesGrid
+				<Flex w="100%" h="100%" flexDir={"row"}>
+					<GamesSidebar
 						onGame={game => {
 							setCurrentGame(game);
 						}}
+						onFirstGameLoaded={game => {
+							if (currentGame != null) return;
+							setCurrentGame(game);
+						}}
 					/>
-				)
+					{currentGame ? (
+						<GameInfo slug={currentGame.slug} />
+					) : (
+						<></>
+						// <GamesGrid
+						// 	onGame={game => {
+						// 		setCurrentGame(game);
+						// 	}}
+						// />
+					)}
+				</Flex>
 			) : (
 				<SignInScreen />
 			)}

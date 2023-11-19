@@ -30,6 +30,7 @@ export enum GameInstallState {
 export interface Game {
 	name: string;
 	slug: string;
+	iconUrl: string;
 	logoUrl: string;
 	backgroundUrl: string;
 	description: string;
@@ -101,8 +102,9 @@ export const useGameStore = create<GameStore>()(set => ({
 			const game: Game = {
 				name: record.name,
 				slug: record.slug,
-				backgroundUrl: pb.files.getUrl(record, record.background),
+				iconUrl: pb.files.getUrl(record, record.icon),
 				logoUrl: pb.files.getUrl(record, record.logo),
+				backgroundUrl: pb.files.getUrl(record, record.background),
 				description: record.description,
 				available: record.available,
 				installState,

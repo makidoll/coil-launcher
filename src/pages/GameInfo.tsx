@@ -1,5 +1,20 @@
-import { Box, Flex, HStack, Progress, Text, VStack } from "@chakra-ui/react";
-import { FaDownload, FaFolderOpen, FaPlay, FaTrash } from "react-icons/fa6";
+import {
+	Box,
+	Flex,
+	HStack,
+	Image,
+	Progress,
+	Text,
+	VStack,
+} from "@chakra-ui/react";
+import {
+	FaDownload,
+	FaFolderOpen,
+	FaPlay,
+	FaTrash,
+	FaX,
+	FaXbox,
+} from "react-icons/fa6";
 import GameTitle from "../components/GameTitle";
 import StandardButton from "../components/StandardButton";
 import {
@@ -12,9 +27,9 @@ import {
 	useGameStore,
 } from "../states/GameStore";
 
-function Version(props: { key: string; title: string; version: string }) {
+function Version(props: { title: string; version: string }) {
 	return (
-		<VStack spacing={1} ml={1} key={props.key}>
+		<VStack spacing={1} ml={1}>
 			<Text fontWeight={"400"} fontSize={"14px"} mt={-1.5}>
 				{props.title}
 			</Text>
@@ -49,99 +64,112 @@ export default function GameInfo(props: { slug: string }) {
 	const playBarLeft: JSX.Element[] = [];
 	const playBarRight: JSX.Element[] = [];
 
-	switch (game.installState) {
-		case GameInstallState.Install:
-			playBarLeft.push(
-				<StandardButton
-					key={"install-button"}
-					leftIcon={<FaDownload />}
-					isLoading={installing}
-					onClick={() => installOrUpdateGame(game)}
-				>
-					Install
-				</StandardButton>,
-			);
-			break;
-
-		case GameInstallState.Update:
-			playBarLeft.push(
-				<StandardButton
-					key={"update-button"}
-					leftIcon={<FaDownload />}
-					isLoading={installing}
-					onClick={() => installOrUpdateGame(game)}
-				>
-					Update
-				</StandardButton>,
-			);
-			break;
-
-		case GameInstallState.Play:
-			playBarLeft.push(
-				<StandardButton
-					key={"play-button"}
-					leftIcon={<FaPlay />}
-					isLoading={installing}
-					onClick={() => launchGame(game)}
-				>
-					Play
-				</StandardButton>,
-			);
-			playBarRight.push(
-				<StandardButton
-					key="open-game-folder"
-					colorScheme="brandBehind"
-					baseWeight={700}
-					isLoading={installing}
-					onClick={() => openGameFolder(game)}
-				>
-					<FaFolderOpen />
-				</StandardButton>,
-				<StandardButton
-					key={"delete-game"}
-					colorScheme="red"
-					isLoading={installing}
-					onClick={() => deleteGame(game)}
-				>
-					<FaTrash />
-				</StandardButton>,
-			);
-			break;
-	}
-
-	if (
-		game.installState == GameInstallState.Update ||
-		game.installState == GameInstallState.Play
-	) {
+	if (!game.available) {
 		playBarLeft.push(
-			<Version
-				key="installed-version"
-				title="Installed"
-				version={game.installed.version}
-			/>,
+			<StandardButton
+				key={"unavailable-button"}
+				isLoading={installing}
+				isDisabled={true}
+				bg="brandBehind.600"
+			>
+				Unavailable
+			</StandardButton>,
 		);
-	}
+	} else {
+		switch (game.installState) {
+			case GameInstallState.Install:
+				playBarLeft.push(
+					<StandardButton
+						key={"install-button"}
+						leftIcon={<FaDownload />}
+						isLoading={installing}
+						onClick={() => installOrUpdateGame(game)}
+					>
+						Install
+					</StandardButton>,
+				);
+				break;
 
-	if (
-		game.installState == GameInstallState.Install ||
-		game.installState == GameInstallState.Update
-	) {
-		playBarLeft.push(
-			<Version
-				key="latest-version"
-				title="Latest"
-				version={game.latest == null ? "None" : game.latest.version}
-			/>,
-		);
+			case GameInstallState.Update:
+				playBarLeft.push(
+					<StandardButton
+						key={"update-button"}
+						leftIcon={<FaDownload />}
+						isLoading={installing}
+						onClick={() => installOrUpdateGame(game)}
+					>
+						Update
+					</StandardButton>,
+				);
+				break;
+
+			case GameInstallState.Play:
+				playBarLeft.push(
+					<StandardButton
+						key={"play-button"}
+						leftIcon={<FaPlay />}
+						isLoading={installing}
+						onClick={() => launchGame(game)}
+					>
+						Play
+					</StandardButton>,
+				);
+				playBarRight.push(
+					<StandardButton
+						key="open-game-folder"
+						colorScheme="brandBehind"
+						baseWeight={700}
+						isLoading={installing}
+						onClick={() => openGameFolder(game)}
+					>
+						<FaFolderOpen />
+					</StandardButton>,
+					<StandardButton
+						key={"delete-game"}
+						colorScheme="red"
+						isLoading={installing}
+						onClick={() => deleteGame(game)}
+					>
+						<FaTrash />
+					</StandardButton>,
+				);
+				break;
+		}
+
+		if (
+			game.installState == GameInstallState.Update ||
+			game.installState == GameInstallState.Play
+		) {
+			playBarLeft.push(
+				<Version
+					key="installed-version"
+					title="Installed"
+					version={game.installed.version}
+				/>,
+			);
+		}
+
+		if (
+			game.installState == GameInstallState.Install ||
+			game.installState == GameInstallState.Update
+		) {
+			playBarLeft.push(
+				<Version
+					key="latest-version"
+					title="Latest"
+					version={game.latest == null ? "None" : game.latest.version}
+				/>,
+			);
+		}
 	}
 
 	return (
-		<Flex flexDir={"column"} h={"100%"}>
+		<Flex flexDir={"column"} w="100%" h="100%">
 			<Flex
 				minH={"128px"}
 				maxH={"128px"}
 				w="100%"
-				backgroundColor={"brandBehind.600"}
+				backgroundColor={"brandBehind.700"}
 				backgroundImage={game.backgroundUrl}
 				backgroundPosition={"center"}
 				backgroundSize={"cover"}
@@ -149,7 +177,17 @@ export default function GameInfo(props: { slug: string }) {
 				alignItems={"end"}
 				p={4}
 			>
-				<GameTitle game={game} />
+				{/* {game.iconUrl ? (
+					<Image
+						src={game.iconUrl}
+						h={"36px"}
+						w={"36px"}
+						mr={"12px"}
+					/>
+				) : (
+					<></>
+				)} */}
+				<GameTitle game={game} h="36px" />
 			</Flex>
 			{installing ? (
 				<Progress

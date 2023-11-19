@@ -31,11 +31,13 @@ export function GameButton(props: { game: Game; onClick: () => any }) {
 							transform: "scale(0.95)",
 					  }
 			}
-			transition={"all 100ms ease-out"}
 			cursor={disabled ? "default" : "pointer"}
 			// shadow={"2xl"}
 			// outline={"solid 1px rgba(255,255,255,0.1)"}
 			onClick={disabled ? null : props.onClick}
+			// transition={"all 100ms ease-out"}
+			transitionProperty="var(--chakra-transition-property-common)"
+			transitionDuration="var(--chakra-transition-duration-normal)"
 		>
 			<Flex w="100%" h="100%" flexDir={"column"} justifyContent={"end"}>
 				<Box pl={2} pb={2}>
