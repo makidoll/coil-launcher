@@ -62,7 +62,7 @@ async function getLatestBuildForOS(gameId: string) {
 
 	try {
 		const build = await pb
-			.collection("game_builds")
+			.collection("launcher_game_builds")
 			.getFirstListItem(`game="${gameId}" && ${urlField} != ""`, {
 				sort: "-created",
 			});
@@ -81,7 +81,9 @@ export const useGameStore = create<GameStore>()(set => ({
 	installing: {},
 	refreshGames: async () => {
 		const pb = useAuthStore.getState().pb;
-		const gamesCollection = await pb.collection("games").getFullList();
+		const gamesCollection = await pb
+			.collection("launcher_games")
+			.getFullList();
 
 		const installedGames = useInstalledStore.getState().games;
 
