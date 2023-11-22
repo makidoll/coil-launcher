@@ -191,6 +191,7 @@ export async function deleteGame(game: Game) {
 export async function launchGame(game: Game) {
 	await invoke("launch_game", {
 		slug: game.slug,
+		authToken: useAuthStore.getState().pb.authStore.token,
 	});
 }
 

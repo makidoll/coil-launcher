@@ -150,7 +150,11 @@ async fn delete_game(app_handle: AppHandle, slug: String) -> Result<(), String> 
 }
 
 #[tauri::command]
-async fn launch_game(app_handle: AppHandle, slug: String) -> Result<(), String> {
+async fn launch_game(
+    app_handle: AppHandle,
+    slug: String,
+    auth_token: String,
+) -> Result<(), String> {
     let install_path = get_install_path_as_pathbuf(&app_handle, &slug)?;
 
     let files = fs::read_dir(&install_path).map_err(|err| err.to_string())?;
@@ -208,6 +212,7 @@ async fn launch_game(app_handle: AppHandle, slug: String) -> Result<(), String> 
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
+        .env("COIL_AUTH_TOKEN", auth_token)
         .spawn()
         .map_err(|err| err.to_string())?;
 
