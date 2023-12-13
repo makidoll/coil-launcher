@@ -114,25 +114,6 @@ export default function GameInfo(props: { slug: string }) {
 						Play
 					</StandardButton>,
 				);
-				playBarRight.push(
-					<StandardButton
-						key="open-game-folder"
-						colorScheme="brandBehind"
-						baseWeight={700}
-						isLoading={installing}
-						onClick={() => openGameFolder(game)}
-					>
-						<FaFolderOpen />
-					</StandardButton>,
-					<StandardButton
-						key={"delete-game"}
-						colorScheme="red"
-						isLoading={installing}
-						onClick={() => deleteGame(game)}
-					>
-						<FaTrash />
-					</StandardButton>,
-				);
 				break;
 		}
 
@@ -146,6 +127,26 @@ export default function GameInfo(props: { slug: string }) {
 					title="Installed"
 					version={game.installed.version}
 				/>,
+			);
+
+			playBarRight.push(
+				<StandardButton
+					key="open-game-folder"
+					colorScheme="brandBehind"
+					baseWeight={700}
+					isLoading={installing}
+					onClick={() => openGameFolder(game)}
+				>
+					<FaFolderOpen />
+				</StandardButton>,
+				<StandardButton
+					key={"delete-game"}
+					colorScheme="red"
+					isLoading={installing}
+					onClick={() => deleteGame(game)}
+				>
+					<FaTrash />
+				</StandardButton>,
 			);
 		}
 
