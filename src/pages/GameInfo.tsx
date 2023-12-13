@@ -71,6 +71,8 @@ export default function GameInfo(props: { slug: string }) {
 				isLoading={installing}
 				isDisabled={true}
 				bg="brandBehind.600"
+				_hover={{ bg: "brandBehind.600" }}
+				_active={{ bg: "brandBehind.600" }}
 			>
 				Unavailable
 			</StandardButton>,
