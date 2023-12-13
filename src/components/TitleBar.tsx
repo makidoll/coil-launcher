@@ -1,29 +1,23 @@
 import {
 	Box,
 	Button,
-	Center,
 	HStack,
-	Icon,
 	IconButton,
 	IconButtonProps,
 	Image,
 	Menu,
 	MenuButton,
-	MenuDivider,
-	MenuGroup,
 	MenuItem,
 	MenuList,
-	Text,
 	chakra,
 } from "@chakra-ui/react";
 import { appWindow } from "@tauri-apps/api/window";
-import { FaArrowLeft, FaArrowsRotate, FaXmark } from "react-icons/fa6";
-import { SiSpringCreators } from "react-icons/si";
-import MechanyxCoilLogo from "./MechanyxCoilLogo";
-import { useAuthStore } from "../states/AuthStore";
-import { chakraColor } from "../utils";
-import { useGameStore } from "../states/GameStore";
 import { useState } from "react";
+import { FaArrowLeft, FaArrowsRotate, FaXmark } from "react-icons/fa6";
+import { useAuthStore } from "../states/AuthStore";
+import { refreshGames } from "../states/GameStore";
+import { chakraColor } from "../utils";
+import MechanyxCoilLogo from "./MechanyxCoilLogo";
 
 function TitleBarIconButton(props: IconButtonProps) {
 	return (
@@ -145,7 +139,8 @@ export default function TitleBar(props: {
 								{/* <MenuDivider /> */}
 							</MenuList>
 						</Menu>
-						<TitleBarIconButton
+						{/* dont need a refresh button when we have realtime updates */}
+						{/* <TitleBarIconButton
 							aria-label="Reload"
 							isDisabled={refreshDisabled}
 							icon={
@@ -156,12 +151,12 @@ export default function TitleBar(props: {
 							}
 							onClick={() => {
 								setRefreshDisabled(true);
-								useGameStore.getState().refreshGames();
+								refreshGames();
 								setTimeout(() => {
 									setRefreshDisabled(false);
 								}, 2000);
 							}}
-						/>
+						/> */}
 					</>
 				) : (
 					<>

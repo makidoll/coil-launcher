@@ -46,12 +46,6 @@ export interface Game {
 	};
 }
 
-interface GameStore {
-	games: Game[];
-	installing: { [slug: string]: number };
-	refreshGames: () => Promise<any>;
-}
-
 async function getLatestBuildForOS(gameId: string) {
 	const pb = useAuthStore.getState().pb;
 
@@ -77,52 +71,87 @@ async function getLatestBuildForOS(gameId: string) {
 	}
 }
 
-export const useGameStore = create<GameStore>()(set => ({
+export async function refreshGames() {
+	const pb = useAuthStore.getState().pb;
+	const gamesCollection = await pb.collection("launcher_games").getFullList();
+
+	const installedGames = useInstalledStore.getState().games;
+
+	const gamesPromises = gamesCollection.map(async record => {
+		const latest = await getLatestBuildForOS(record.id);
+		const version = installedGames[record.slug];
+
+		const installState =
+			version == null
+				? GameInstallState.Install
+				: latest.version != version
+				? GameInstallState.Update
+				: GameInstallState.Play;
+
+		const game: Game = {
+			name: record.name,
+			slug: record.slug,
+			iconUrl: pb.files.getUrl(record, record.icon),
+			logoUrl: pb.files.getUrl(record, record.logo),
+			backgroundUrl: pb.files.getUrl(record, record.background),
+			description: record.description,
+			available: record.available,
+			installState,
+			installed: {
+				path: await invoke("get_install_path", {
+					slug: record.slug,
+				}),
+				version,
+			},
+			latest,
+		};
+		return game;
+	});
+
+	const games = await Promise.all(gamesPromises);
+
+	useGameStore.setState({ games });
+}
+
+export async function initRealtimeGameUpdates() {
+	if (useGameStore.getState().initializedRealtime) return;
+
+	const pb = useAuthStore.getState().pb;
+
+	await pb.collection("launcher_games").subscribe("*", e => {
+		refreshGames();
+	});
+
+	await pb.collection("launcher_game_builds").subscribe("*", e => {
+		refreshGames();
+	});
+
+	useGameStore.setState({ initializedRealtime: true });
+}
+
+export async function deinitRealtimeGameUpdates() {
+	const pb = useAuthStore.getState().pb;
+
+	await pb.collection("launcher_games").unsubscribe();
+	await pb.collection("launcher_game_builds").unsubscribe();
+
+	useGameStore.setState({ initializedRealtime: false });
+}
+
+interface GameStore {
+	games: Game[];
+	installing: { [slug: string]: number };
+	initializedRealtime: boolean;
+	// refreshGames: () => Promise<any>;
+	// initRealtime: () => Promise<any>;
+}
+
+export const useGameStore = create<GameStore>()(() => ({
 	games: [],
 	installing: {},
-	refreshGames: async () => {
-		const pb = useAuthStore.getState().pb;
-		const gamesCollection = await pb
-			.collection("launcher_games")
-			.getFullList();
-
-		const installedGames = useInstalledStore.getState().games;
-
-		const gamesPromises = gamesCollection.map(async record => {
-			const latest = await getLatestBuildForOS(record.id);
-			const version = installedGames[record.slug];
-
-			const installState =
-				version == null
-					? GameInstallState.Install
-					: latest.version != version
-					? GameInstallState.Update
-					: GameInstallState.Play;
-
-			const game: Game = {
-				name: record.name,
-				slug: record.slug,
-				iconUrl: pb.files.getUrl(record, record.icon),
-				logoUrl: pb.files.getUrl(record, record.logo),
-				backgroundUrl: pb.files.getUrl(record, record.background),
-				description: record.description,
-				available: record.available,
-				installState,
-				installed: {
-					path: await invoke("get_install_path", {
-						slug: record.slug,
-					}),
-					version,
-				},
-				latest,
-			};
-			return game;
-		});
-
-		const games = await Promise.all(gamesPromises);
-
-		set({ games });
-	},
+	initializedRealtime: false,
+	// refreshGames,
+	// initRealtime,
 }));
 
 export async function installOrUpdateGame(game: Game) {
@@ -169,7 +198,7 @@ export async function installOrUpdateGame(game: Game) {
 
 	// refresh games
 
-	useGameStore.getState().refreshGames();
+	refreshGames();
 }
 
 export async function deleteGame(game: Game) {
@@ -185,7 +214,7 @@ export async function deleteGame(game: Game) {
 		useInstalledStore.setState({ games });
 	}
 
-	useGameStore.getState().refreshGames();
+	refreshGames();
 }
 
 export async function launchGame(game: Game) {

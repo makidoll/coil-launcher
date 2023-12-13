@@ -3,6 +3,7 @@ import {
 	extendTheme,
 	withDefaultColorScheme,
 } from "@chakra-ui/react";
+import { generateStripe } from "@chakra-ui/theme-tools";
 import "@fontsource/inter/100.css";
 import "@fontsource/inter/200.css";
 import "@fontsource/inter/300.css";
@@ -12,11 +13,9 @@ import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 import "@fontsource/inter/900.css";
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { hsv, hsvMix, hsvPaletteToHex, printHsvPalette } from "./color-utils";
-import { generateStripe } from "@chakra-ui/theme-tools";
+import { hsv, hsvMix, hsvPaletteToHex } from "./color-utils";
 
 if (globalThis.localStorage != null) {
 	globalThis.localStorage.setItem("chakra-ui-color-mode", "dark");

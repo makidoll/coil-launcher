@@ -4,7 +4,11 @@ import Avatar from "boring-avatars";
 import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
 import { renderToString } from "react-dom/server";
 import { create } from "zustand";
-import { useGameStore } from "./GameStore";
+import {
+	deinitRealtimeGameUpdates,
+	initRealtimeGameUpdates,
+	refreshGames,
+} from "./GameStore";
 
 export enum LoginMethod {
 	AutoLogin = "autoLogin",
@@ -131,7 +135,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
 			// other things to do after logging in
 			(async () => {
-				await useGameStore.getState().refreshGames();
+				await refreshGames();
+				await initRealtimeGameUpdates();
 			})();
 
 			return { error: "" };
@@ -141,6 +146,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 		}
 	},
 	logout: async () => {
+		(async () => {
+			await deinitRealtimeGameUpdates();
+		})();
+
 		get().pb.authStore.clear();
 		set({ loggedIn: false, username: "" });
 	},
