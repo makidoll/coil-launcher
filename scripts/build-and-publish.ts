@@ -1,8 +1,21 @@
+import * as dotenv from "https://deno.land/std@0.203.0/dotenv/mod.ts";
 import * as fs from "https://deno.land/std@0.203.0/fs/mod.ts";
 import * as path from "https://deno.land/std@0.203.0/path/mod.ts";
 import PocketBase, { ClientResponseError, RecordModel } from "npm:pocketbase";
+import { getDirname, prettier } from "./utils.ts";
 
-const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
+const env = await dotenv.load({ allowEmptyValues: true });
+
+function getEnvOrFail(key: string) {
+	const value = Deno.env.get(key) ?? env[key];
+	if (value == null) {
+		console.log(key + " not set");
+		Deno.exit(1);
+	}
+	return value;
+}
+
+const __dirname = getDirname(import.meta);
 
 const isWindows = Deno.build.os == "windows";
 
@@ -52,9 +65,8 @@ async function makeBuild() {
 		stdout: "inherit",
 		stderr: "inherit",
 		env: {
-			TAURI_PRIVATE_KEY:
-				"dW50cnVzdGVkIGNvbW1lbnQ6IHJzaWduIGVuY3J5cHRlZCBzZWNyZXQga2V5ClJXUlRZMEl5MXJVL3ZyMXFwM0pmdU9idWp5OGd6Z3l1WDYrUEZZNXNZSmhBQWdqTVRiRUFBQkFBQUFBQUFBQUFBQUlBQUFBQVdJSXNGV3UyM1hOVDFCUVpTQ3BoMG9XRWtsdWZIOWtGY3RyRkJjOU9rVUdMTEIxaEZqU3F3Znp0cUdVeC9PWlFqcEhxN0x1L2FDWk5vZGdHampSbXZlTzVXZ0pQUE1xalRNVEJNaTFnWVdldGphajUySU81UVlHTzIzbmlIdkNCUFpXRFc3OTdPMjA9Cg==",
-			TAURI_KEY_PASSWORD: "",
+			TAURI_PRIVATE_KEY: getEnvOrFail("TAURI_PRIVATE_KEY"),
+			TAURI_KEY_PASSWORD: getEnvOrFail("TAURI_KEY_PASSWORD"),
 		},
 	}).output();
 
@@ -83,8 +95,8 @@ const version = JSON.parse(
 const pb = new PocketBase("https://coil.mechanyx.co/pb");
 
 await pb.admins.authWithPassword(
-	"build@mechanyx.localhost",
-	"fcDVeV0CxONEYU7gJNSvOElPYlMQ9jH7",
+	getEnvOrFail("PB_PUBLISH_EMAIL"),
+	getEnvOrFail("PB_PUBLISH_PASSWORD"),
 );
 
 const launcher = pb.collection("launcher_builds");
@@ -116,6 +128,18 @@ const fileExtToAttributeMap = [
 	{ ext: ".AppImage.tar.gz", attr: "appimageUpdate" },
 	{ ext: ".AppImage.tar.gz.sig", attr: "appimageSig", text: true },
 ];
+
+// update public key
+
+{
+	const jsonPath = path.resolve(__dirname, "../src-tauri/tauri.conf.json");
+	const json = JSON.parse(await Deno.readTextFile(jsonPath));
+	json.tauri.updater.pubkey = getEnvOrFail("TAURI_PUBLIC_KEY");
+	await Deno.writeTextFile(jsonPath, JSON.stringify(json, null, 4));
+	prettier(jsonPath);
+}
+
+// create or update record
 
 let versionRecord = await getDbEntry(version);
 

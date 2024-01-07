@@ -6,6 +6,7 @@
 		"hono/middleware": "https://deno.land/x/hono@v3.10.0/middleware.ts",
 		"hono/mime": "https://deno.land/x/hono@v3.10.0/utils/mime.ts",
 		"pocketbase": "npm:pocketbase@0.19.0",
-		"path": "https://deno.land/std@0.206.0/path/mod.ts"
+		"path": "https://deno.land/std@0.206.0/path/mod.ts",
+		"dotenv": "https://deno.land/std@0.206.0/dotenv/mod.ts"
 	}
 }
