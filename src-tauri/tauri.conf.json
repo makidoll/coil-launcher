@@ -8,7 +8,7 @@
 	},
 	"package": {
 		"productName": "Mechanyx Coil",
-		"version": "2023.12.13-123"
+		"version": "2024.1.7-459"
 	},
 	"tauri": {
 		"allowlist": {
@@ -57,7 +57,7 @@
 				"https://coil.mechanyx.co/api/launcher/latest?os={{target}}"
 			],
 			"dialog": true,
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhGRTUwNEY3RjQ4MDE0MUIKUldRYkZJRDA5d1RsanoyOVhxVUU3b3RrL1RlYVYvMi9VTjJCZzQxbGx6b25ZVFE1eUJraVRPME0K"
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQxQTAwNEIzNTMxNzUwRQpSV1FPZFRFMVN3QWFEWU4vQjVOVFRGNHhhRytDZU1ySFZrb0laNXo4MmZ2Y1BOZTBOemxQR0VIRQo="
 		},
 		"security": {
 			"csp": null
