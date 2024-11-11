@@ -1,6 +1,7 @@
-import { invoke, shell } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { platform } from "@tauri-apps/api/os";
+import { platform } from "@tauri-apps/plugin-os";
+import * as shell from "@tauri-apps/plugin-shell";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { useAuthStore } from "./AuthStore";
@@ -50,8 +51,8 @@ async function getLatestBuildForOS(gameId: string) {
 	const pb = useAuthStore.getState().pb;
 
 	let urlField = "";
-	const currentPlatform = await platform();
-	if (currentPlatform == "win32") urlField = "windowsBuild";
+	const currentPlatform = platform();
+	if (currentPlatform == "windows") urlField = "windowsBuild";
 	else if (currentPlatform == "linux") urlField = "linuxBuild";
 	if (urlField == "") throw new Error("OS not supported");
 

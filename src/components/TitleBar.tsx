@@ -11,13 +11,13 @@ import {
 	MenuList,
 	chakra,
 } from "@chakra-ui/react";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useState } from "react";
-import { FaArrowLeft, FaArrowsRotate, FaXmark } from "react-icons/fa6";
+import { FaArrowLeft, FaXmark } from "react-icons/fa6";
 import { useAuthStore } from "../states/AuthStore";
-import { refreshGames } from "../states/GameStore";
 import { chakraColor } from "../utils";
 import MechanyxCoilLogo from "./MechanyxCoilLogo";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 function TitleBarIconButton(props: IconButtonProps) {
 	return (
@@ -172,7 +172,7 @@ export default function TitleBar(props: {
 						/>
 					}
 					onClick={() => {
-						appWindow.close();
+						getCurrentWindow().close();
 					}}
 				/>
 			</HStack>

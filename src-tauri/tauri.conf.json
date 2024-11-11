@@ -1,67 +1,16 @@
 {
+	"$schema": "https://schema.tauri.app/config/2",
+	"productName": "Mechanyx Coil",
+	"mainBinaryName": "Mechanyx Coil",
+	"version": "2024.1.7-459",
+	"identifier": "co.mechanyx.coil",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
+		"devUrl": "http://localhost:1420",
 		"beforeBuildCommand": "pnpm build",
-		"devPath": "http://localhost:1420",
-		"distDir": "../dist",
-		"withGlobalTauri": false
+		"frontendDist": "../dist"
 	},
-	"package": {
-		"productName": "Mechanyx Coil",
-		"version": "2024.1.7-459"
-	},
-	"tauri": {
-		"allowlist": {
-			"all": false,
-			"shell": {
-				"all": false,
-				"open": "^(file://)|(https://)"
-			},
-			"window": {
-				"all": false,
-				"close": true,
-				"hide": true,
-				"show": true,
-				"maximize": true,
-				"minimize": true,
-				"unmaximize": true,
-				"unminimize": true,
-				"startDragging": true
-			},
-			"os": {
-				"all": true
-			},
-			"fs": {
-				"scope": ["$APPDATA/**/*"]
-			}
-		},
-		"bundle": {
-			"active": true,
-			"targets": ["appimage", "nsis", "updater"],
-			"identifier": "co.mechanyx.coil",
-			"publisher": "Mechanyx",
-			"icon": [
-				"icons/32x32.png",
-				"icons/128x128.png",
-				"icons/128x128@2x.png",
-				"icons/icon.icns",
-				"icons/icon.ico"
-			],
-			"windows": {
-				"nsis": {}
-			}
-		},
-		"updater": {
-			"active": true,
-			"endpoints": [
-				"https://coil.mechanyx.co/api/launcher/latest?os={{target}}"
-			],
-			"dialog": true,
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQxQTAwNEIzNTMxNzUwRQpSV1FPZFRFMVN3QWFEWU4vQjVOVFRGNHhhRytDZU1ySFZrb0laNXo4MmZ2Y1BOZTBOemxQR0VIRQo="
-		},
-		"security": {
-			"csp": null
-		},
+	"app": {
 		"windows": [
 			{
 				"fullscreen": false,
@@ -70,8 +19,37 @@
 				"width": 800,
 				"height": 500,
 				"decorations": false,
-				"transparent": true
+				"transparent": true,
+				"useHttpsScheme": true
 			}
-		]
+		],
+		"security": {
+			"csp": null
+		}
+	},
+	"bundle": {
+		"active": true,
+		"targets": ["appimage", "nsis"],
+		"windows": {
+			"nsis": {}
+		},
+		"publisher": "Mechanyx",
+		"icon": [
+			"icons/32x32.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		],
+		"createUpdaterArtifacts": true
+	},
+
+	"plugins": {
+		"updater": {
+			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY0RTYyOEVGMTNDNDY1OUYKUldTZlpjUVQ3eWptWkE0MDF1ZTNZQWFGeDVCd1hGQWR1M2JOc0NTZFFtTEUvUUhLWWlLbVRFemkK",
+			"endpoints": [
+				"https://coil.mechanyx.co/api/launcher/latest?os={{target}}"
+			]
+		}
 	}
 }

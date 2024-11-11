@@ -9,7 +9,7 @@
 		"preview": "vite preview",
 		"tauri": "tauri",
 		"tauri:dev": "tauri dev",
-		"tauri:build": "tauri build"
+		"tauri:build": "cross-env NO_STRIP=true tauri build"
 	},
 	"dependencies": {
 		"@aws-crypto/sha256-browser": "^5.2.0",
@@ -18,7 +18,11 @@
 		"@emotion/react": "^11.11.1",
 		"@emotion/styled": "^11.11.0",
 		"@fontsource/inter": "^5.0.16",
-		"@tauri-apps/api": "^1.5.2",
+		"@tauri-apps/api": "^2",
+		"@tauri-apps/plugin-fs": "~2",
+		"@tauri-apps/plugin-os": "~2",
+		"@tauri-apps/plugin-shell": "~2",
+		"@tauri-apps/plugin-updater": "~2",
 		"boring-avatars": "^1.10.1",
 		"formik": "^2.4.5",
 		"framer-motion": "^10.16.16",
@@ -29,10 +33,11 @@
 		"zustand": "^4.4.7"
 	},
 	"devDependencies": {
-		"@tauri-apps/cli": "^1.5.7",
+		"@tauri-apps/cli": "^2",
 		"@types/react": "^18.2.45",
 		"@types/react-dom": "^18.2.17",
 		"@vitejs/plugin-react": "^4.2.1",
+		"cross-env": "^7.0.3",
 		"typescript": "^5.3.3",
 		"vite": "^5.0.8"
 	}

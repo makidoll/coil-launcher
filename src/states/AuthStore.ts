@@ -1,5 +1,5 @@
 import { Sha256 } from "@aws-crypto/sha256-browser";
-import { shell } from "@tauri-apps/api";
+import * as shell from "@tauri-apps/plugin-shell";
 import Avatar from "boring-avatars";
 import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
 import { renderToString } from "react-dom/server";
