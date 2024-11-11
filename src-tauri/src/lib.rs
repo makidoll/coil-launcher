@@ -96,37 +96,28 @@ async fn install_or_update_game(
         let mut file = archive.by_index(i).map_err(|err| err.to_string())?;
 
         let file_name = file.enclosed_name().unwrap().to_path_buf();
+        let file_path = install_path.as_path().join(&file_name);
 
         if file.is_file() {
             // make path if missing first
 
-            let file_path = install_path.as_path().join(&file_name);
             let file_dir = file_path.parent().unwrap();
             let _ = fs::create_dir_all(file_dir);
 
             let mut out_file = fs::File::create(&file_path).unwrap();
             std::io::copy(&mut file, &mut out_file).unwrap();
-
-            // set file permissions as well
-            #[cfg(unix)]
-            {
-                use std::os::unix::fs::PermissionsExt;
-
-                if let Some(mode) = file.unix_mode() {
-                    fs::set_permissions(&file_path, fs::Permissions::from_mode(mode)).unwrap();
-                }
-            }
         } else if file.is_dir() {
-            let _ = fs::create_dir_all(&file_name);
+            // make dir
+            let _ = fs::create_dir_all(file_path.as_path());
+        }
 
-            // set file permissions as well
-            #[cfg(unix)]
-            {
-                use std::os::unix::fs::PermissionsExt;
+        // set file permissions as well
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
 
-                if let Some(mode) = file.unix_mode() {
-                    fs::set_permissions(&file_name, fs::Permissions::from_mode(mode)).unwrap();
-                }
+            if let Some(mode) = file.unix_mode() {
+                fs::set_permissions(&file_path, fs::Permissions::from_mode(mode)).unwrap();
             }
         }
 
