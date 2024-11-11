@@ -25,7 +25,7 @@ const version =
 {
 	const jsonPath = path.resolve(__dirname, "../src-tauri/tauri.conf.json");
 	const json = JSON.parse(await Deno.readTextFile(jsonPath));
-	json.package.version = version;
+	json.version = version;
 	await Deno.writeTextFile(jsonPath, JSON.stringify(json, null, 4));
 	prettier(jsonPath);
 }

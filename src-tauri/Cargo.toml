@@ -1,6 +1,6 @@
 [package]
 name = "mechanyx-coil"
-version = "2024.1.7-459"
+version = "2024.11.11-83"
 description = "Mechanyx Coil Launcher"
 authors = ["you"]
 edition = "2021"

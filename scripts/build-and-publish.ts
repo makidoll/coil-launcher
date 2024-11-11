@@ -56,7 +56,7 @@ async function makeBuild() {
 		stderr: "inherit",
 	}).output();
 
-	const buildArgs = ["pnpm", "tauri", "build", ...(debug ? ["--debug"] : [])];
+	const buildArgs = ["pnpm", "tauri:build", ...(debug ? ["--debug"] : [])];
 	if (isWindows) buildArgs.unshift("cmd", "/c");
 
 	const build = await new Deno.Command(buildArgs[0], {
@@ -65,8 +65,12 @@ async function makeBuild() {
 		stdout: "inherit",
 		stderr: "inherit",
 		env: {
-			TAURI_PRIVATE_KEY: getEnvOrFail("TAURI_PRIVATE_KEY"),
-			TAURI_KEY_PASSWORD: getEnvOrFail("TAURI_KEY_PASSWORD"),
+			TAURI_SIGNING_PRIVATE_KEY: getEnvOrFail(
+				"TAURI_SIGNING_PRIVATE_KEY",
+			),
+			TAURI_SIGNING_PRIVATE_KEY_PASSWORD: getEnvOrFail(
+				"TAURI_SIGNING_PRIVATE_KEY_PASSWORD",
+			),
 		},
 	}).output();
 
@@ -88,7 +92,7 @@ const version = JSON.parse(
 	await Deno.readTextFile(
 		path.resolve(__dirname, "../src-tauri/tauri.conf.json"),
 	),
-).package.version;
+).version;
 
 // init pocketbase
 
@@ -121,23 +125,21 @@ for await (const filename of Deno.readDir(bundleDir)) {
 }
 
 const fileExtToAttributeMap = [
-	{ ext: ".exe", attr: "nsisSetup" },
-	{ ext: ".nsis.zip", attr: "nsisUpdate" },
-	{ ext: ".nsis.zip.sig", attr: "nsisSig", text: true },
-	{ ext: ".AppImage", attr: "appimageSetup" },
-	{ ext: ".AppImage.tar.gz", attr: "appimageUpdate" },
-	{ ext: ".AppImage.tar.gz.sig", attr: "appimageSig", text: true },
+	{ ext: ".exe", attr: "nsis" },
+	{ ext: ".exe.sig", attr: "nsisSig", text: true },
+	{ ext: ".AppImage", attr: "appimage" },
+	{ ext: ".AppImage.sig", attr: "appimageSig", text: true },
 ];
 
 // update public key
 
-{
-	const jsonPath = path.resolve(__dirname, "../src-tauri/tauri.conf.json");
-	const json = JSON.parse(await Deno.readTextFile(jsonPath));
-	json.tauri.updater.pubkey = getEnvOrFail("TAURI_PUBLIC_KEY");
-	await Deno.writeTextFile(jsonPath, JSON.stringify(json, null, 4));
-	prettier(jsonPath);
-}
+// {
+// 	const jsonPath = path.resolve(__dirname, "../src-tauri/tauri.conf.json");
+// 	const json = JSON.parse(await Deno.readTextFile(jsonPath));
+// 	json.tauri.updater.pubkey = getEnvOrFail("TAURI_PUBLIC_KEY");
+// 	await Deno.writeTextFile(jsonPath, JSON.stringify(json, null, 4));
+// 	prettier(jsonPath);
+// }
 
 // create or update record
 
