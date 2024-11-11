@@ -23,7 +23,7 @@ export function apiLauncherRoutes(pb: PocketBase) {
 		}
 
 		const latest = await launcher.getFirstListItem(
-			`${osPrefixMap[os]}Update != ""`,
+			`${osPrefixMap[os]} != ""`,
 			{ sort: "-created" },
 		);
 
@@ -31,10 +31,7 @@ export function apiLauncherRoutes(pb: PocketBase) {
 			return c.json({ error: "No releases found" }, 404);
 		}
 
-		const updateUrl = pb.getFileUrl(
-			latest,
-			latest[osPrefixMap[os] + "Update"],
-		);
+		const updateUrl = pb.getFileUrl(latest, latest[osPrefixMap[os]]);
 
 		return c.json({
 			version: latest.version,
@@ -55,7 +52,7 @@ export function apiLauncherRoutes(pb: PocketBase) {
 		}
 
 		const latest = await launcher.getFirstListItem(
-			`${osPrefixMap[os]}Setup != ""`,
+			`${osPrefixMap[os]} != ""`,
 			{ sort: "-created" },
 		);
 
@@ -63,10 +60,7 @@ export function apiLauncherRoutes(pb: PocketBase) {
 			return c.json({ error: "No releases found" }, 404);
 		}
 
-		const updateUrl = pb.getFileUrl(
-			latest,
-			latest[osPrefixMap[os] + "Setup"],
-		);
+		const updateUrl = pb.getFileUrl(latest, latest[osPrefixMap[os]]);
 
 		return c.redirect(updateUrl);
 	});
